@@ -1,21 +1,48 @@
-import React, { Component } from "react";
-import logo from "./logo.svg";
-import "./App.css";
+import React, {useState, useEffect} from 'react';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+export default function App() {
+  // const [target, setTarget] = useState(new SpeechSynthesisUtterance());
+  const [voices, setVoices] = useState();
+  const [source, setSource] = useState('en-US');
+
+  // use to set utterance properties
+  const [target, setTarget] = useState({
+    text: '',   // set by input
+    voice: null,  // set by input
+    lang: 'es-US',   // set by voice
+    volume: 1,  // between 0 and 1, 1 is default
+    pitch: 1,   // between 0 (lowest) and 2 (highest), with 1 being the default pitch
+    rate: 1,    // between 0.1 (lowest) and 10 (highest), with 1 being the default pitch
+  });
+
+  useEffect(() => {
+    window.speechSynthesis.onvoiceschanged = () =>{
+      if (!voices) {
+        const voiceSet = [...window.speechSynthesis.getVoices()];
+        setVoices(voiceSet);
+      }
+    }
+  }, []);
+
+  const handleInputChange = e => {
+    const {name, value} = e.target;
+    console.log(target)
+    // setTarget({
+    //   ...target,
+    //   [name]: value,
+    // });
   }
+
+  return (
+    <div>
+      <textarea value={target.text}
+             name='text'
+             onChange={handleInputChange}
+             placeholder='Enter a word or phrase'
+             type='text'/>
+
+
+    </div>
+  )
 }
 
-export default App;
