@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import useLocalStorage from "./useLocalStorage";
 
 import TextToSpeech from "../classes/TextToSpeech";
-import { TextToSpeechOpts } from "../models/TextToSpeechConfig";
+import TextToSpeechOptions from "../models/TextToSpeechOptions";
 
-const DEFAULTS: TextToSpeechOpts = {
+const DEFAULTS: TextToSpeechOptions = {
   lang: "",
   voice: null,
   pitch: 1,
@@ -15,29 +15,40 @@ const DEFAULTS: TextToSpeechOpts = {
 const useTextToSpeech = (): [
   boolean,
   TextToSpeech,
-  SpeechSynthesisVoice[],
-  [TextToSpeechOpts, React.Dispatch<TextToSpeechOpts>]
+  [TextToSpeechOptions, React.Dispatch<TextToSpeechOptions>],
+  boolean,
+  string[]
 ] => {
-  const _textToSpeechAvailable = TextToSpeech.isSupported();
-  const [_textToSpeech] = useState<TextToSpeech>(TextToSpeech.getInstance());
-  const [_voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
-  const _config = useLocalStorage<TextToSpeechOpts>(
+  const ttsIsSupported = TextToSpeech.isSupported();
+  const [textToSpeech] = useState<TextToSpeech>(() =>
+    TextToSpeech.getInstance()
+  );
+  const config = useLocalStorage<TextToSpeechOptions>(
     "TextToSpeechOptions",
     DEFAULTS
   );
 
-  const handleVoicesLoaded = () => setVoices(_textToSpeech.voices);
+  // TODO add logic to also update speechSynthesys
+
+  const [voicesLoaded, setVoicesLoaded] = useState<boolean>(false);
+
+  const langList = useMemo<string[]>(
+    () => Object.keys(textToSpeech.voices),
+    [textToSpeech.voices]
+  );
+
   useEffect(() => {
-    _textToSpeech.manager.addEventListener("voiceschanged", handleVoicesLoaded);
+    textToSpeech.manager.addEventListener("voiceschanged", handleVoicesLoaded);
     return () => {
-      _textToSpeech.manager.removeEventListener(
+      textToSpeech.manager.removeEventListener(
         "voiceschanged",
         handleVoicesLoaded
       );
     };
   });
+  const handleVoicesLoaded = () => setVoicesLoaded(true);
 
-  return [_textToSpeechAvailable, _textToSpeech, _voices, _config];
+  return [ttsIsSupported, textToSpeech, config, voicesLoaded, langList];
 };
 
 export default useTextToSpeech;
