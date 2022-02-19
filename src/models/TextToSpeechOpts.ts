@@ -1,4 +1,4 @@
-export interface TextToSpeechOpts {
+export default interface TextToSpeechOpts {
   lang: string;
   voice: SpeechSynthesisVoice | null;
   pitch: number; // range between 0 (lowest) and 2 (highest)
