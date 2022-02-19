@@ -1,10 +1,10 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import Translator from "./Translator";
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <Translator />
   </React.StrictMode>,
   document.getElementById("root")
 );
