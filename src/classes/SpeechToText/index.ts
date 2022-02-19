@@ -4,17 +4,39 @@ export default class SpeechToText {
 
   private constructor() {
     this._manager = new webkitSpeechRecognition();
-    this._manager.onstart = (e: Event) => {console.log('onstart')};
-    this._manager.onaudiostart = (e: Event) => {console.log('onaudiostart')};
-    this._manager.onsoundstart = (e: Event) => {console.log('onsoundstart')};
-    this._manager.onspeechstart = (e: Event) => {console.log('onspeechstart')};
-    this._manager.onspeechend = (e: Event) => {console.log('onspeechend')};
-    this._manager.onsoundend = (e: Event) => {console.log('onsoundend')};
-    this._manager.onaudioend = (e: Event) => {console.log('onaudioend')};
-    this._manager.onresult = (e: SpeechRecognitionEvent) => {console.log('onresult')};
-    this._manager.onend = (e: Event) => {console.log('onend')};
-    this._manager.onnomatch = (e: SpeechRecognitionEvent) => {console.log('onnomatch')};
-    this._manager.onerror = (e: Event) => {console.log('onend')};
+    this._manager.onstart = (e: Event) => {
+      console.log("onstart");
+    };
+    this._manager.onaudiostart = (e: Event) => {
+      console.log("onaudiostart");
+    };
+    this._manager.onsoundstart = (e: Event) => {
+      console.log("onsoundstart");
+    };
+    this._manager.onspeechstart = (e: Event) => {
+      console.log("onspeechstart");
+    };
+    this._manager.onspeechend = (e: Event) => {
+      console.log("onspeechend");
+    };
+    this._manager.onsoundend = (e: Event) => {
+      console.log("onsoundend");
+    };
+    this._manager.onaudioend = (e: Event) => {
+      console.log("onaudioend");
+    };
+    this._manager.onresult = (e: SpeechRecognitionEvent) => {
+      console.log("onresult");
+    };
+    this._manager.onend = (e: Event) => {
+      console.log("onend");
+    };
+    this._manager.onnomatch = (e: SpeechRecognitionEvent) => {
+      console.log("onnomatch");
+    };
+    this._manager.onerror = (e: Event) => {
+      console.log("onend");
+    };
   }
 
   static isSupported(): boolean {
