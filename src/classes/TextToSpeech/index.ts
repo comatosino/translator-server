@@ -1,12 +1,31 @@
 export default class TextToSpeech {
   private static _instance: TextToSpeech;
-  private _manager: SpeechSynthesis;
-  private _voices: SpeechSynthesisVoice[] = [];
+  public manager: SpeechSynthesis;
+  public voices: {
+    [langCode: string]: SpeechSynthesisVoice[];
+  } = {};
 
   private constructor() {
-    this._manager = speechSynthesis;
-    this._manager.onvoiceschanged = () => {
-      this._voices = this._manager.getVoices();
+    this.manager = speechSynthesis;
+    this.manager.onvoiceschanged = () => {
+      const voicesArr = this.manager.getVoices();
+      this.voices = voicesArr.reduce(
+        (
+          voiceMap: {
+            [langCode: string]: SpeechSynthesisVoice[];
+          },
+          voice: SpeechSynthesisVoice
+        ) => {
+          const prefix = voice.lang.substring(0, 2);
+          if (voiceMap[prefix]) {
+            voiceMap[prefix].push(voice);
+          } else {
+            voiceMap[prefix] = [voice];
+          }
+          return voiceMap;
+        },
+        {}
+      );
     };
   }
 
@@ -18,14 +37,5 @@ export default class TextToSpeech {
     if (this._instance) return this._instance;
     this._instance = new TextToSpeech();
     return this._instance;
-  }
-
-  get manager(): SpeechSynthesis {
-    return this._manager;
-  }
-
-  get voices(): SpeechSynthesisVoice[] {
-    if (this._voices) return this._voices;
-    return this._manager.getVoices();
   }
 }
