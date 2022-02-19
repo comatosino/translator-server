@@ -2,9 +2,9 @@ import React, { useState } from "react";
 import useLocalStorage from "./useLocalStorage";
 
 import SpeechToText from "../classes/SpeechToText";
-import { SpeechToTextOpts } from "../models/SpeechToTextConfig";
+import SpeechToTextOptions from "../models/speechToTextOptions";
 
-const DEFAULTS: SpeechToTextOpts = {
+const DEFAULTS: SpeechToTextOptions = {
   lang: "",
   continuous: false,
   interim: false,
@@ -13,15 +13,15 @@ const DEFAULTS: SpeechToTextOpts = {
 const useSpeechToText = (): [
   boolean,
   SpeechToText,
-  [SpeechToTextOpts, React.Dispatch<SpeechToTextOpts>]
+  [SpeechToTextOptions, React.Dispatch<SpeechToTextOptions>]
 ] => {
-  const _speechToTextAvailable = SpeechToText.isSupported();
-  const [_speechToText] = useState<SpeechToText>(SpeechToText.getInstance());
-  const _config = useLocalStorage<SpeechToTextOpts>(
+  const sttIsSupported = SpeechToText.isSupported();
+  const [manager] = useState<SpeechToText>(SpeechToText.getInstance());
+  const config = useLocalStorage<SpeechToTextOptions>(
     "SpeechToTextOptions",
     DEFAULTS
   );
-  return [_speechToTextAvailable, _speechToText, _config];
+  return [sttIsSupported, manager, config];
 };
 
 export default useSpeechToText;
