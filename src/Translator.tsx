@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { ReactHTML } from "react";
 
 import useSpeechToText from "./hooks/useSpeechToText";
 import useTextToSpeech from "./hooks/useTextToSpeech";
@@ -13,47 +13,41 @@ import {
   ListSubheader,
   TextareaAutosize,
   Button,
+  Typography,
+  Container,
+  FormGroup,
+  FormControlLabel,
+  Switch,
 } from "@mui/material";
+
+import Slider from "@mui/material/Slider";
 
 const Translator: React.FC = (): JSX.Element => {
   const [speechToTextAvailable, speechToText, useSttOptions] =
     useSpeechToText();
+
   const [
     textToSpeechAvailable,
     textToSpeech,
     useTtsOptions,
     voicesReady,
-    langList,
+    langCodeList,
+    MUIvoiceDisplayList,
   ] = useTextToSpeech();
 
+  // save options to local storage
   const [sstOpts, setSstOpts] = useSttOptions;
   const [ttsOpts, setTtsOpts] = useTtsOptions;
 
-  const voiceList = useMemo(() => {
-    if (voicesReady) {
-      const result: { type: string; content: string }[] = [];
-      for (let i = 0; i < langList.length; i++) {
-        const langCode = langList[i];
-        const langVoices = textToSpeech.voices[langCode];
-        result.push({ type: "subheader", content: langCode });
-        for (let j = 0; j < langVoices.length; j++) {
-          const voice = langVoices[j];
-          result.push({ type: "item", content: voice.name });
-        }
-      }
-      return result;
-    }
-  }, [voicesReady, textToSpeech.voices, langList]);
-
   const handleSelectChange = (e: SelectChangeEvent<string>): void => {
-    const { name, value: lang } = e.target;
+    const { name, value } = e.target;
     try {
       switch (name) {
         case "source":
-          setSstOpts({ ...sstOpts, lang });
+          setSstOpts({ ...sstOpts, lang: value });
           break;
         case "target":
-          setTtsOpts({ ...ttsOpts, lang });
+          setTtsOpts({ ...ttsOpts, voice: value });
           break;
         default:
           throw new Error("Something went wrong...");
@@ -64,7 +58,7 @@ const Translator: React.FC = (): JSX.Element => {
   };
 
   return speechToTextAvailable && textToSpeechAvailable ? (
-    <>
+    <Container>
       <Box>
         <Stack spacing={5}>
           <FormControl fullWidth>
@@ -80,8 +74,8 @@ const Translator: React.FC = (): JSX.Element => {
                 <em>Select a language!</em>
               </MenuItem>
               {voicesReady &&
-                langList
-                  .filter((lang) => lang !== ttsOpts.lang)
+                langCodeList
+                  .filter((lang) => lang !== ttsOpts.voice)
                   .map((lang) => (
                     <MenuItem key={lang} value={lang}>
                       {lang}
@@ -91,6 +85,31 @@ const Translator: React.FC = (): JSX.Element => {
           </FormControl>
 
           <TextareaAutosize aria-label="empty textarea" placeholder="input" />
+
+          <FormGroup>
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={sstOpts.continuous}
+                  onChange={(e) =>
+                    setSstOpts({ ...sstOpts, continuous: !sstOpts.continuous })
+                  }
+                />
+              }
+              label="Continuous Listening?"
+            />
+            <FormControlLabel
+              control={
+                <Switch
+                  checked={sstOpts.interim}
+                  onChange={(e) =>
+                    setSstOpts({ ...sstOpts, interim: !sstOpts.interim })
+                  }
+                />
+              }
+              label="Interim Results?"
+            />
+          </FormGroup>
 
           <Box>
             <Button>Start Listening</Button>
@@ -102,7 +121,7 @@ const Translator: React.FC = (): JSX.Element => {
               label="Target Language"
               id="tgt-lang"
               name="target"
-              value={voicesReady ? ttsOpts.lang : ""}
+              value={voicesReady ? ttsOpts.voice : ""}
               onChange={handleSelectChange}
             >
               <MenuItem value="">
@@ -110,7 +129,7 @@ const Translator: React.FC = (): JSX.Element => {
               </MenuItem>
 
               {voicesReady &&
-                voiceList?.map((data) => {
+                MUIvoiceDisplayList?.map((data) => {
                   if (data.type === "subheader")
                     return (
                       <ListSubheader key={data.content}>
@@ -119,18 +138,77 @@ const Translator: React.FC = (): JSX.Element => {
                     );
                   if (data.type === "item")
                     return (
-                      <MenuItem key={data.content} value={data.content}>
+                      <MenuItem
+                        key={data.content}
+                        value={`${data.lang}-${data.content}`}
+                      >
                         {data.content}
                       </MenuItem>
                     );
+                  return (
+                    <MenuItem value="">
+                      <em>Select a language and voice!</em>
+                    </MenuItem>
+                  );
                 })}
             </Select>
           </FormControl>
 
           <TextareaAutosize aria-label="empty textarea" placeholder="output" />
+
+          <Box>
+            <Button>Speak</Button>
+          </Box>
+
+          <Box>
+            <Typography id="volume-slider">Volume</Typography>
+            <Slider
+              aria-labelledby="volume-slider"
+              value={ttsOpts.volume}
+              getAriaValueText={() => `${ttsOpts.volume}`}
+              valueLabelDisplay="auto"
+              step={0.25}
+              marks
+              min={0}
+              max={1}
+              onChange={(e: Event, value: number | number[]) => {
+                setTtsOpts({ ...ttsOpts, volume: value });
+              }}
+            />
+
+            <Typography id="pitch-slider">Pitch</Typography>
+            <Slider
+              aria-labelledby="pitch-slider"
+              value={ttsOpts.pitch}
+              getAriaValueText={() => `${ttsOpts.pitch}`}
+              valueLabelDisplay="auto"
+              step={0.25}
+              marks
+              min={0}
+              max={2}
+              onChange={(e: Event, value: number | number[]) => {
+                setTtsOpts({ ...ttsOpts, pitch: value });
+              }}
+            />
+
+            <Typography id="rate-slider">Rate</Typography>
+            <Slider
+              aria-labelledby="rate-slider"
+              value={ttsOpts.rate}
+              getAriaValueText={() => `${ttsOpts.rate}`}
+              valueLabelDisplay="auto"
+              step={0.1}
+              marks
+              min={0.1}
+              max={10}
+              onChange={(e: Event, value: number | number[]) => {
+                setTtsOpts({ ...ttsOpts, rate: value });
+              }}
+            />
+          </Box>
         </Stack>
       </Box>
-    </>
+    </Container>
   ) : (
     <h1>not supported</h1>
   );
