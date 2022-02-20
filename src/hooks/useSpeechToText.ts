@@ -16,7 +16,7 @@ const useSpeechToText = (): [
   [SpeechToTextOptions, React.Dispatch<SpeechToTextOptions>]
 ] => {
   const sttIsSupported = SpeechToText.isSupported();
-  const [manager] = useState<SpeechToText>(SpeechToText.getInstance());
+  const [manager] = useState<SpeechToText>(() => SpeechToText.getInstance());
   const config = useLocalStorage<SpeechToTextOptions>(
     "SpeechToTextOptions",
     DEFAULTS
