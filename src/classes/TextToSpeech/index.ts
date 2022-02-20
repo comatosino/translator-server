@@ -38,4 +38,8 @@ export default class TextToSpeech {
     this._instance = new TextToSpeech();
     return this._instance;
   }
+
+  getVoiceArray(): SpeechSynthesisVoice[] {
+    return this.manager.getVoices();
+  }
 }
