@@ -1,4 +1,4 @@
-type VoiceMap = { [langCode: string]: SpeechSynthesisVoice[] };
+import VoiceMap from "../../models/VoiceMap";
 
 export default class TextToSpeech {
   private static _instance: TextToSpeech;
