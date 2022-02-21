@@ -29,12 +29,17 @@ const Translator: React.FC = (): JSX.Element => {
   ] = useTextToSpeech();
 
   const srcLang = useSttOptions[0].lang;
-  const trgLang = useTtsOptions[0].voice.substring(0,5);
+  const trgLang = useTtsOptions[0].voice.substring(0, 5);
 
   return speechToTextAvailable && textToSpeechAvailable ? (
     <Container>
       {page === 0 ? (
-        <Main textToSpeech={textToSpeech} speechToText={speechToText} src={srcLang} trg={trgLang}/>
+        <Main
+          textToSpeech={textToSpeech}
+          speechToText={speechToText}
+          src={srcLang}
+          trg={trgLang}
+        />
       ) : (
         <Options
           voicesReady={voicesReady}
@@ -56,7 +61,7 @@ const Translator: React.FC = (): JSX.Element => {
           }}
         >
           <BottomNavigationAction label="Main" />
-          <BottomNavigationAction label="Settings" />
+          <BottomNavigationAction label="Options" />
         </BottomNavigation>
       </Paper>
     </Container>
