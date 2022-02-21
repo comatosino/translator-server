@@ -1,9 +1,11 @@
+const SpeechRecognition = window.SpeechRecognition || webkitSpeechRecognition;
+
 export default class SpeechToText {
   private static _instance: SpeechToText;
   public interface: SpeechRecognition;
 
   private constructor() {
-    this.interface = new webkitSpeechRecognition();
+    this.interface = new SpeechRecognition() || new webkitSpeechRecognition();
     this.interface.onstart = (e: Event) => {
       console.log("onstart");
     };
