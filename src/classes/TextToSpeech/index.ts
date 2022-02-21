@@ -1,26 +1,20 @@
+type VoiceMap = { [langCode: string]: SpeechSynthesisVoice[] };
+
 export default class TextToSpeech {
   private static _instance: TextToSpeech;
-  public manager: SpeechSynthesis;
-  public voices: {
-    [langCode: string]: SpeechSynthesisVoice[];
-  } = {};
+  public interface: SpeechSynthesis;
+  public voices: VoiceMap = {};
 
   private constructor() {
-    this.manager = speechSynthesis;
-    this.manager.onvoiceschanged = () => {
-      const voicesArr = this.manager.getVoices();
+    this.interface = speechSynthesis;
+    this.interface.onvoiceschanged = () => {
+      const voicesArr = this.interface.getVoices();
       this.voices = voicesArr.reduce(
-        (
-          voiceMap: {
-            [langCode: string]: SpeechSynthesisVoice[];
-          },
-          voice: SpeechSynthesisVoice
-        ) => {
-          const prefix = voice.lang.substring(0, 2);
-          if (voiceMap[prefix]) {
-            voiceMap[prefix].push(voice);
+        (voiceMap: VoiceMap, voice: SpeechSynthesisVoice) => {
+          if (voiceMap[voice.lang]) {
+            voiceMap[voice.lang].push(voice);
           } else {
-            voiceMap[prefix] = [voice];
+            voiceMap[voice.lang] = [voice];
           }
           return voiceMap;
         },
@@ -40,6 +34,6 @@ export default class TextToSpeech {
   }
 
   getVoiceArray(): SpeechSynthesisVoice[] {
-    return this.manager.getVoices();
+    return this.interface.getVoices();
   }
 }
