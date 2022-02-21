@@ -20,61 +20,54 @@ const useTextToSpeech = (): [
   { type: string; content: string; lang: string }[]
 ] => {
   const ttsIsSupported = TextToSpeech.isSupported();
-  const [textToSpeech] = useState<TextToSpeech>(() =>
-    TextToSpeech.getInstance()
-  );
+
+  const [tts] = useState<TextToSpeech>(() => TextToSpeech.getInstance());
   const config = useLocalStorage<TextToSpeechOptions>(
     "TextToSpeechOptions",
     DEFAULTS
   );
 
-  const [voicesReady, setVoicesReady] = useState<boolean>(false);
+  const [voicesReady, setVoicesReady] = useState<boolean>(true);
+  useEffect(() => {
+    if (tts.voices) setVoicesReady(true);
+  }, [tts.voices]);
 
-  // returns a list of BCP 47 language tags
+  // creates a list of BCP 47 language tags for display
   const langCodeList = useMemo<string[]>(() => {
     let uniqueLangCodes: string[] = [];
-    if (voicesReady) {
-      const voices = textToSpeech.getVoiceArray();
+    if (tts.voices && voicesReady) {
+      const voices = tts.getVoiceArray();
       const langCodes = voices.map((voice) => voice.lang);
       uniqueLangCodes = [...new Set(langCodes)];
     }
     return uniqueLangCodes;
-  }, [textToSpeech, voicesReady]);
+  }, [tts, tts.voices, voicesReady]);
 
-  // returns list of objects with information to create MUI MenuItem components
-  const MUIvoiceDisplayList = useMemo<
-    { type: string; content: string; lang: string }[]
-  >(() => {
-    let result: { type: string; content: string; lang: string }[] = [];
+  // creates list of objects with information to create MUI MenuItem components
+  // target language select options
+  type MUIVoiceDisplayType = { type: string; content: string; lang: string }[];
+  const MUIvoiceDisplayList = useMemo<MUIVoiceDisplayType>(() => {
+    let result: MUIVoiceDisplayType = [];
     if (voicesReady) {
-      const langList = Object.keys(textToSpeech.voices);
+      const langList = Object.keys(tts.voices);
+
       for (let i = 0; i < langList.length; i++) {
         const langCode = langList[i];
-        const langVoices = textToSpeech.voices[langCode];
+        const langVoices = tts.voices[langCode];
         result.push({ type: "subheader", content: langCode, lang: langCode });
+
         for (let j = 0; j < langVoices.length; j++) {
           const voice = langVoices[j];
-          result.push({ type: "item", content: voice.name, lang: langCode });
+          result.push({ type: "item", content: voice.name, lang: voice.lang });
         }
       }
     }
     return result;
-  }, [voicesReady, textToSpeech.voices]);
-
-  useEffect(() => {
-    textToSpeech.manager.addEventListener("voiceschanged", handleVoicesLoaded);
-    return () => {
-      textToSpeech.manager.removeEventListener(
-        "voiceschanged",
-        handleVoicesLoaded
-      );
-    };
-  });
-  const handleVoicesLoaded = () => setVoicesReady(true);
+  }, [tts.voices, voicesReady]);
 
   return [
     ttsIsSupported,
-    textToSpeech,
+    tts,
     config,
     voicesReady,
     langCodeList,
