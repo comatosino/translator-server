@@ -12,6 +12,7 @@ import {
   Stack,
   Switch,
   Typography,
+  Divider,
 } from "@mui/material";
 
 import SpeechToTextOptions from "../models/SpeechToTextOptions";
@@ -79,13 +80,16 @@ const Options = (props: OptionsProps) => {
     <>
       <Box
         sx={{
+          height: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
         }}
       >
         <Stack spacing={5}>
-          <Typography variant="h3">Settings</Typography>
+          <Typography>
+            <Divider>Source Language Options</Divider>
+          </Typography>
           <FormControl fullWidth>
             <InputLabel id="src-lang">Source Language</InputLabel>
             <Select
@@ -130,6 +134,9 @@ const Options = (props: OptionsProps) => {
             />
           </FormGroup>
 
+          <Typography>
+            <Divider>Target Language Options</Divider>
+          </Typography>
           <FormControl fullWidth>
             <InputLabel id="tgt-lang">Target Language</InputLabel>
             <Select
@@ -148,7 +155,6 @@ const Options = (props: OptionsProps) => {
                   if (data.type === "subheader")
                     return (
                       <ListSubheader key={data.content}>
-                        {/* 2-char language code */}
                         {data.lang}
                       </ListSubheader>
                     );
@@ -158,7 +164,6 @@ const Options = (props: OptionsProps) => {
                         key={data.content}
                         value={`${data.lang} ${data.content}`}
                       >
-                        {/*voice name property e.g. Google US English */}
                         {data.content}
                       </MenuItem>
                     );
