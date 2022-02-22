@@ -32,37 +32,39 @@ const Translator: React.FC = (): JSX.Element => {
   const trgLang = useTtsOptions[0].voice.substring(0, 5);
 
   return speechToTextAvailable && textToSpeechAvailable ? (
-    <Container>
-      {page === 0 ? (
-        <Main
-          textToSpeech={textToSpeech}
-          speechToText={speechToText}
-          src={srcLang}
-          trg={trgLang}
-        />
-      ) : (
-        <Options
-          voicesReady={voicesReady}
-          langCodeList={langCodeList}
-          MUIvoiceDisplayList={MUIvoiceDisplayList}
-          useSttOptions={useSttOptions}
-          useTtsOptions={useTtsOptions}
-        />
-      )}
-      <Paper
-        sx={{ position: "fixed", bottom: 0, left: 0, right: 0 }}
-        elevation={3}
-      >
-        <BottomNavigation
-          showLabels
-          value={page}
-          onChange={(_, newValue) => {
-            setPage(newValue);
-          }}
-        >
-          <BottomNavigationAction label="Main" />
-          <BottomNavigationAction label="Options" />
-        </BottomNavigation>
+    <Container fixed maxWidth="sm">
+      <Paper elevation={5}>
+        {page === 0 ? (
+          <Main
+            textToSpeech={textToSpeech}
+            speechToText={speechToText}
+            src={srcLang}
+            trg={trgLang}
+          />
+        ) : (
+          <Options
+            voicesReady={voicesReady}
+            langCodeList={langCodeList}
+            MUIvoiceDisplayList={MUIvoiceDisplayList}
+            useSttOptions={useSttOptions}
+            useTtsOptions={useTtsOptions}
+          />
+        )}
+        <Paper sx={{ width: "auto" }} elevation={3}>
+          <BottomNavigation
+            showLabels
+            value={page}
+            onChange={(
+              _e: React.SyntheticEvent<Element, Event>,
+              value: number
+            ) => {
+              setPage(value);
+            }}
+          >
+            <BottomNavigationAction label="Main" />
+            <BottomNavigationAction label="Options" />
+          </BottomNavigation>
+        </Paper>
       </Paper>
     </Container>
   ) : (

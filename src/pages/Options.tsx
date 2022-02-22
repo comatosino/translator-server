@@ -77,148 +77,146 @@ const Options = (props: OptionsProps) => {
   };
 
   return (
-    <>
-      <Box
-        sx={{
-          height: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Stack spacing={5}>
-          <Typography>
-            <Divider>Source Language Options</Divider>
-          </Typography>
-          <FormControl fullWidth>
-            <InputLabel id="src-lang">Source Language</InputLabel>
-            <Select
-              label="Source Language"
-              id="src-lang"
-              name="source"
-              value={voicesReady ? sstOpts.lang : ""}
-              onChange={handleSetSourceLang}
-            >
-              <MenuItem value="">
-                <em>Select a language!</em>
-              </MenuItem>
-              {voicesReady &&
-                langCodeList
-                  .filter((lang) => lang !== ttsOpts.voice)
-                  .map((lang) => (
-                    <MenuItem key={lang} value={lang}>
-                      {lang}
-                    </MenuItem>
-                  ))}
-            </Select>
-          </FormControl>
+    <Box
+      sx={{
+        height: "90vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Stack spacing={2.5}>
+        <Typography component="h2">
+          <Divider>Source Language Options</Divider>
+        </Typography>
 
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={sstOpts.continuous}
-                  onChange={handleSetContinuous}
-                />
-              }
-              label="Continuous Listening?"
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={sstOpts.interimResults}
-                  onChange={handleSetInterim}
-                />
-              }
-              label="Interim Results?"
-            />
-          </FormGroup>
+        <FormControl fullWidth>
+          <InputLabel id="src-lang">Source Language</InputLabel>
+          <Select
+            label="Source Language"
+            id="src-lang"
+            name="source"
+            value={voicesReady ? sstOpts.lang : ""}
+            onChange={handleSetSourceLang}
+          >
+            <MenuItem value="">
+              <em>Select a language!</em>
+            </MenuItem>
+            {voicesReady &&
+              langCodeList
+                .filter((lang) => lang !== ttsOpts.voice)
+                .map((lang) => (
+                  <MenuItem key={lang} value={lang}>
+                    {lang}
+                  </MenuItem>
+                ))}
+          </Select>
+        </FormControl>
 
-          <Typography>
-            <Divider>Target Language Options</Divider>
-          </Typography>
-          <FormControl fullWidth>
-            <InputLabel id="tgt-lang">Target Language</InputLabel>
-            <Select
-              label="Target Language"
-              id="tgt-lang"
-              name="target"
-              value={voicesReady ? ttsOpts.voice : ""}
-              onChange={handleSetTargetLang}
-            >
-              <MenuItem value="">
-                <em>Select a language and voice!</em>
-              </MenuItem>
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Switch
+                checked={sstOpts.continuous}
+                onChange={handleSetContinuous}
+              />
+            }
+            label="Continuous Listening?"
+          />
+          <FormControlLabel
+            control={
+              <Switch
+                checked={sstOpts.interimResults}
+                onChange={handleSetInterim}
+              />
+            }
+            label="Interim Results?"
+          />
+        </FormGroup>
 
-              {voicesReady &&
-                MUIvoiceDisplayList?.map((data) => {
-                  if (data.type === "subheader")
-                    return (
-                      <ListSubheader key={data.content}>
-                        {data.lang}
-                      </ListSubheader>
-                    );
-                  if (data.type === "item")
-                    return (
-                      <MenuItem
-                        key={data.content}
-                        value={`${data.lang} ${data.content}`}
-                      >
-                        {data.content}
-                      </MenuItem>
-                    );
+        <Typography component="h2">
+          <Divider>Target Language Options</Divider>
+        </Typography>
+
+        <FormControl fullWidth>
+          <InputLabel id="tgt-lang">Target Language</InputLabel>
+          <Select
+            label="Target Language"
+            id="tgt-lang"
+            name="target"
+            value={voicesReady ? ttsOpts.voice : ""}
+            onChange={handleSetTargetLang}
+          >
+            <MenuItem value="">
+              <em>Select a language and voice!</em>
+            </MenuItem>
+
+            {voicesReady &&
+              MUIvoiceDisplayList?.map((data) => {
+                if (data.type === "subheader")
                   return (
-                    <MenuItem value="">
-                      <em></em>
+                    <ListSubheader key={data.content}>
+                      {data.lang}
+                    </ListSubheader>
+                  );
+                if (data.type === "item")
+                  return (
+                    <MenuItem
+                      key={data.content}
+                      value={`${data.lang} ${data.content}`}
+                    >
+                      {data.content}
                     </MenuItem>
                   );
-                })}
-            </Select>
-          </FormControl>
+                return (
+                  <MenuItem value="">
+                    <em></em>
+                  </MenuItem>
+                );
+              })}
+          </Select>
+        </FormControl>
 
-          <Box>
-            <Typography id="volume-slider">Volume</Typography>
-            <Slider
-              aria-labelledby="volume-slider"
-              value={ttsOpts.volume}
-              getAriaValueText={() => `${ttsOpts.volume}`}
-              valueLabelDisplay="auto"
-              step={0.25}
-              marks
-              min={0}
-              max={1}
-              onChange={handleSetVolume}
-            />
+        <Typography id="volume-slider">Volume</Typography>
+        <Slider
+          aria-labelledby="volume-slider"
+          value={ttsOpts.volume}
+          getAriaValueText={() => `${ttsOpts.volume}`}
+          valueLabelDisplay="auto"
+          step={0.25}
+          marks
+          min={0}
+          max={1}
+          onChange={handleSetVolume}
+        />
 
-            <Typography id="pitch-slider">Pitch</Typography>
-            <Slider
-              aria-labelledby="pitch-slider"
-              value={ttsOpts.pitch}
-              getAriaValueText={() => `${ttsOpts.pitch}`}
-              valueLabelDisplay="auto"
-              step={0.25}
-              marks
-              min={0}
-              max={2}
-              onChange={handleSetPitch}
-            />
+        <Typography id="pitch-slider">Pitch</Typography>
+        <Slider
+          aria-labelledby="pitch-slider"
+          value={ttsOpts.pitch}
+          getAriaValueText={() => `${ttsOpts.pitch}`}
+          valueLabelDisplay="auto"
+          step={0.25}
+          marks
+          min={0}
+          max={2}
+          onChange={handleSetPitch}
+        />
 
-            <Typography id="rate-slider">Rate</Typography>
-            <Slider
-              aria-labelledby="rate-slider"
-              value={ttsOpts.rate}
-              getAriaValueText={() => `${ttsOpts.rate}`}
-              valueLabelDisplay="auto"
-              step={0.1}
-              marks
-              min={0.1}
-              max={10}
-              onChange={handleSetRate}
-            />
-          </Box>
-        </Stack>
-      </Box>
-    </>
+        <Typography id="rate-slider">Rate</Typography>
+        <Slider
+          aria-labelledby="rate-slider"
+          value={ttsOpts.rate}
+          getAriaValueText={() => `${ttsOpts.rate}`}
+          valueLabelDisplay="auto"
+          step={0.1}
+          marks
+          min={0.1}
+          max={10}
+          onChange={handleSetRate}
+        />
+      </Stack>
+    </Box>
   );
 };
 
