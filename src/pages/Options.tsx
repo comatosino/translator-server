@@ -14,35 +14,36 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
+import MuiLists from "../types/MuiLists";
 
-import SpeechToTextOptions from "../models/SpeechToTextOptions";
-import TextToSpeechOptions from "../models/TextToSpeechOptions";
+import SpeechToTextOptions from "../types/SpeechToTextOptions";
+import TextToSpeechOptions from "../types/TextToSpeechOptions";
 
 type OptionsProps = {
   voicesReady: boolean;
-  langCodeList: string[];
-  MUIvoiceDisplayList: { type: string; content: string; lang: string }[];
-  useSttOptions: [SpeechToTextOptions, React.Dispatch<SpeechToTextOptions>];
-  useTtsOptions: [TextToSpeechOptions, React.Dispatch<TextToSpeechOptions>];
+  useSpeechToTextOptions: [
+    SpeechToTextOptions,
+    React.Dispatch<SpeechToTextOptions>
+  ];
+  useTextToSpeechOptions: [
+    TextToSpeechOptions,
+    React.Dispatch<TextToSpeechOptions>
+  ];
+  muiLists: MuiLists;
 };
 
 const Options = (props: OptionsProps) => {
   const {
     voicesReady,
-    langCodeList,
-    MUIvoiceDisplayList,
-    useSttOptions,
-    useTtsOptions,
+    useSpeechToTextOptions,
+    useTextToSpeechOptions,
+    muiLists,
   } = props;
 
-  // save options to local storage
-  const [sstOpts, setSstOpts] = useSttOptions;
-  const [ttsOpts, setTtsOpts] = useTtsOptions;
+  const [sstOpts, setSstOpts] = useSpeechToTextOptions;
+  const [ttsOpts, setTtsOpts] = useTextToSpeechOptions;
 
-  const handleSetTargetLang = (e: SelectChangeEvent<string>): void => {
-    setTtsOpts({ ...ttsOpts, voice: e.target.value });
-  };
-
+  // SPEECH RECOGNITION OPTIONS
   const handleSetSourceLang = (e: SelectChangeEvent<string>): void => {
     setSstOpts({ ...sstOpts, lang: e.target.value });
   };
@@ -62,6 +63,11 @@ const Options = (props: OptionsProps) => {
     _checked: boolean
   ): void => {
     setSstOpts({ ...sstOpts, interimResults: !sstOpts.interimResults });
+  };
+
+  // SPEECH SYNTHESIS OPTIONS
+  const handleSetTargetLang = (e: SelectChangeEvent<string>): void => {
+    setTtsOpts({ ...ttsOpts, voice: e.target.value });
   };
 
   const handleSetVolume = (_e: Event, value: number | number[]): void => {
@@ -103,7 +109,7 @@ const Options = (props: OptionsProps) => {
               <em>Select a language!</em>
             </MenuItem>
             {voicesReady &&
-              langCodeList
+              muiLists.srcCodeList
                 .filter((lang) => lang !== ttsOpts.voice)
                 .map((lang) => (
                   <MenuItem key={lang} value={lang}>
@@ -117,6 +123,7 @@ const Options = (props: OptionsProps) => {
           <FormControlLabel
             control={
               <Switch
+                disabled
                 checked={sstOpts.continuous}
                 onChange={handleSetContinuous}
               />
@@ -126,6 +133,7 @@ const Options = (props: OptionsProps) => {
           <FormControlLabel
             control={
               <Switch
+                disabled
                 checked={sstOpts.interimResults}
                 onChange={handleSetInterim}
               />
@@ -152,7 +160,7 @@ const Options = (props: OptionsProps) => {
             </MenuItem>
 
             {voicesReady &&
-              MUIvoiceDisplayList?.map((data) => {
+              muiLists.trgCodeList.map((data) => {
                 if (data.type === "subheader")
                   return (
                     <ListSubheader key={data.content}>
@@ -179,6 +187,7 @@ const Options = (props: OptionsProps) => {
 
         <Typography id="volume-slider">Volume</Typography>
         <Slider
+          disabled
           aria-labelledby="volume-slider"
           value={ttsOpts.volume}
           getAriaValueText={() => `${ttsOpts.volume}`}
@@ -192,6 +201,7 @@ const Options = (props: OptionsProps) => {
 
         <Typography id="pitch-slider">Pitch</Typography>
         <Slider
+          disabled
           aria-labelledby="pitch-slider"
           value={ttsOpts.pitch}
           getAriaValueText={() => `${ttsOpts.pitch}`}
@@ -205,6 +215,7 @@ const Options = (props: OptionsProps) => {
 
         <Typography id="rate-slider">Rate</Typography>
         <Slider
+          disabled
           aria-labelledby="rate-slider"
           value={ttsOpts.rate}
           getAriaValueText={() => `${ttsOpts.rate}`}
