@@ -1,59 +1,53 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import useLocalStorage from "./useLocalStorage";
 
 import TextToSpeech from "../classes/TextToSpeech";
-import TextToSpeechOptions from "../models/TextToSpeechOptions";
 
-const DEFAULTS: TextToSpeechOptions = {
-  voice: "",
-  pitch: 1,
-  rate: 1,
-  volume: 1,
-};
+import TextToSpeechOptions from "../types/TextToSpeechOptions";
+import UseTextToSpeechReturn from "../types/UseTextToSpeechReturn";
+import Speaker from "../types/Speaker";
+import MuiLists from "../types/MuiLists";
 
-const useTextToSpeech = (): [
-  boolean,
-  TextToSpeech,
-  [TextToSpeechOptions, React.Dispatch<TextToSpeechOptions>],
-  boolean,
-  string[],
-  { type: string; content: string; lang: string }[]
-] => {
-  const ttsIsSupported = TextToSpeech.isSupported();
+import { TEXT_TO_SPEECH_DEFAULTS } from "../utils/defaultOptions";
 
-  const [tts] = useState<TextToSpeech>(() => TextToSpeech.getInstance());
-  const config = useLocalStorage<TextToSpeechOptions>(
+const useTextToSpeech = (): UseTextToSpeechReturn => {
+  const textToSpeechAvailable = TextToSpeech.isSupported();
+
+  const instance = useState<TextToSpeech>(() => TextToSpeech.getInstance())[0];
+
+  const useTextToSpeechOptions = useLocalStorage<TextToSpeechOptions>(
     "TextToSpeechOptions",
-    DEFAULTS
+    TEXT_TO_SPEECH_DEFAULTS
   );
 
-  const [voicesReady, setVoicesReady] = useState<boolean>(true);
+  const [voicesReady, setVoicesReady] = useState<boolean>(false);
   useEffect(() => {
-    if (tts.voices) setVoicesReady(true);
-  }, [tts.voices]);
+    if (instance.getVoiceArray().length) setVoicesReady(true);
+    else setVoicesReady(false);
+  }, [instance]);
 
+  // source language select options
   // creates a list of BCP 47 language tags for display
-  const langCodeList = useMemo<string[]>(() => {
+  const srcCodeList = useMemo<string[]>(() => {
     let uniqueLangCodes: string[] = [];
-    if (tts.voices && voicesReady) {
-      const voices = tts.getVoiceArray();
+    if (voicesReady) {
+      const voices = instance.getVoiceArray();
       const langCodes = voices.map((voice) => voice.lang);
       uniqueLangCodes = [...new Set(langCodes)];
     }
     return uniqueLangCodes;
-  }, [tts, tts.voices, voicesReady]);
+  }, [instance, voicesReady]);
 
-  // creates list of objects with information to create MUI MenuItem components
-  // target language select options
-  type MUIVoiceDisplayType = { type: string; content: string; lang: string }[];
-  const MUIvoiceDisplayList = useMemo<MUIVoiceDisplayType>(() => {
-    let result: MUIVoiceDisplayType = [];
-    if (voicesReady) {
-      const langList = Object.keys(tts.voices);
+  // target language & voice select options
+  // creates list of objects with info for MUI MenuItem & Subheader components
+  const trgCodeList = useMemo<MuiLists["trgCodeList"]>(() => {
+    let result: MuiLists["trgCodeList"] = [];
+    if (instance.voices && voicesReady) {
+      const langList = Object.keys(instance.voices);
 
       for (let i = 0; i < langList.length; i++) {
         const langCode = langList[i];
-        const langVoices = tts.voices[langCode];
+        const langVoices = instance.voices[langCode];
         result.push({ type: "subheader", content: langCode, lang: langCode });
 
         for (let j = 0; j < langVoices.length; j++) {
@@ -63,16 +57,30 @@ const useTextToSpeech = (): [
       }
     }
     return result;
-  }, [tts.voices, voicesReady]);
+  }, [instance.voices, voicesReady]);
 
-  return [
-    ttsIsSupported,
-    tts,
-    config,
+  const speaker: Speaker = {
     voicesReady,
-    langCodeList,
-    MUIvoiceDisplayList,
-  ];
+    speak(text: string, options: TextToSpeechOptions) {
+      instance.speak(text, options);
+    },
+    pause() {
+      instance.pause();
+    },
+    resume() {
+      instance.resume();
+    },
+    cancel() {
+      instance.cancel();
+    },
+  };
+
+  const muiLists: MuiLists = {
+    srcCodeList,
+    trgCodeList,
+  };
+
+  return { textToSpeechAvailable, speaker, useTextToSpeechOptions, muiLists };
 };
 
 export default useTextToSpeech;

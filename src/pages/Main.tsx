@@ -1,23 +1,25 @@
 import { Box, Button } from "@mui/material";
 
-const Main = (props) => {
+type MainProps = {
+  startListening: () => void;
+};
+
+const Main = (props: MainProps) => {
+  const { startListening } = props;
+
   return (
-    <Box
-      sx={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Button
-        onClick={() => {
-          alert("clicked");
+    <>
+      <Box
+        sx={{
+          height: "90vh",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
         }}
       >
-        Start Listening
-      </Button>
-    </Box>
+        <Button onClick={startListening}>Start Listening</Button>
+      </Box>
+    </>
   );
 };
 
