@@ -1,4 +1,5 @@
-import VoiceMap from "../../models/VoiceMap";
+import TextToSpeechOptions from "../../types/TextToSpeechOptions";
+import VoiceMap from "../../types/VoiceMap";
 
 export default class TextToSpeech {
   private static _instance: TextToSpeech;
@@ -7,6 +8,7 @@ export default class TextToSpeech {
 
   private constructor() {
     this.interface = speechSynthesis;
+
     this.interface.onvoiceschanged = () => {
       const voicesArr = this.interface.getVoices();
       this.voices = voicesArr.reduce(
@@ -35,5 +37,33 @@ export default class TextToSpeech {
 
   getVoiceArray(): SpeechSynthesisVoice[] {
     return this.interface.getVoices();
+  }
+
+  speak(text: string, options: TextToSpeechOptions): void {
+    const voices = this.getVoiceArray();
+    const utteranceVoice = voices.find(
+      (voice) => voice.name === options.voice.substring(6)
+    );
+
+    if (utteranceVoice) {
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.voice = utteranceVoice;
+      utterance.volume = options.volume as number;
+      utterance.pitch = options.pitch as number;
+      utterance.rate = options.rate as number;
+      this.interface.speak(utterance);
+    }
+  }
+
+  pause(): void {
+    this.interface.pause();
+  }
+
+  resume(): void {
+    this.interface.resume();
+  }
+
+  cancel(): void {
+    this.interface.cancel();
   }
 }
