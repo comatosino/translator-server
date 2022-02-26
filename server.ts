@@ -1,5 +1,8 @@
+import "dotenv/config";
 import express from "express";
 import path from "path";
+
+console.log(process.env);
 
 const PORT = process.env.PORT || 5000;
 
@@ -8,7 +11,6 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static("../client/build")); // Serve the React static files after build
-
 
 app.get("/api/hello", (req, res) => {
   res.send({ message: "Hello" });

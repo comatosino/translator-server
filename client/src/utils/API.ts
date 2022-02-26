@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-// import { GOOGLE_MAPS_API_KEY } from "./env";
 
 export default class API {
   static translate = (srcLang: string, trgLang: string, text: string) => {
@@ -11,7 +10,7 @@ export default class API {
           Accept: "application/json",
         },
         params: {
-          key: `${GOOGLE_MAPS_API_KEY}`,
+          key: `${process.env.GOOGLE_MAPS_API_KEY}`,
         },
       };
 
