@@ -1,52 +1,39 @@
 {
   "name": "translator",
-  "homepage": "http://comatosino.github.io/translator",
-  "version": "0.1.0",
-  "private": true,
-  "dependencies": {
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
-    "@fontsource/roboto": "^4.5.3",
-    "@mui/icons-material": "^5.4.2",
-    "@mui/material": "^5.4.2",
-    "@reduxjs/toolkit": "^1.7.2",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
-    "@types/jest": "^24.9.1",
-    "@types/node": "^12.20.45",
-    "@types/react": "^16.14.23",
-    "@types/react-dom": "^16.9.14",
-    "@types/react-redux": "^7.1.22",
-    "@types/webspeechapi": "0.0.29",
-    "axios": "^0.25.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-redux": "^7.2.6",
-    "react-scripts": "5.0.0",
-    "typescript": "^4.1.6"
-  },
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "scripts": {
-    "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "start": "node dist/server.js",
+    "prebuild": "tsconfig.json --fix",
+    "build": "tsc --project .",
+    "build-prod": "cd client && npm install && npm run build && cd .. && npm install && npm run build",
+    "server": "nodemon --verbose --watch \"server\" --ext \"ts,json\" --exec ts-node server.ts",
+    "client": "cd client && npm start && cd ..",
+    "dev": "concurrently \"npm run client\" \"npm run server\"",
+    "install": "cd client && npm install"
   },
-  "eslintConfig": {
-    "extends": "react-app"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comatosino/translator.git"
   },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/comatosino/translator/issues"
+  },
+  "homepage": "https://github.com/comatosino/translator#readme",
+  "dependencies": {
+    "express": "^4.17.3"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "@types/node": "^17.0.21",
+    "concurrently": "^7.0.0",
+    "eslint": "^8.10.0",
+    "nodemon": "^2.0.15",
+    "ts-node": "^10.5.0",
+    "typescript": "^4.5.5"
   }
 }
