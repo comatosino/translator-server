@@ -1,5 +1,7 @@
 import axios, { AxiosRequestConfig } from "axios";
-import { GOOGLE_MAPS_API_KEY } from "./env";
+// import { GOOGLE_MAPS_API_KEY } from "./env";
+
+const GOOGLE_MAPS_API_KEY = 'AIzaSyDLI-7CaXdsEh5l7ml6GPciMWoD98FiQz0'
 
 export default class API {
   static translate = (srcLang: string, trgLang: string, text: string) => {
