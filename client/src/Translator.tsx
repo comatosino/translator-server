@@ -36,8 +36,9 @@ const Translator: React.FC = (): JSX.Element => {
     async (text: string) => {
       try {
         const response = await API.translate(srcLang, trgLang, text);
-        const result = response.data.data.translations[0].translatedText;
-        setTranslation(result);
+        console.log(response);
+        // const result = response.data.data.translations[0].translatedText;
+        // setTranslation(result);
       } catch (error) {
         console.log(error);
       }
