@@ -1,18 +1,17 @@
 import React, { useCallback, useEffect, useState } from "react";
 
-import useSpeechToText from "./hooks/useSpeechToText";
-import useTextToSpeech from "./hooks/useTextToSpeech";
-
 import {
   Container,
   BottomNavigation,
   BottomNavigationAction,
   Paper,
+  Typography,
 } from "@mui/material";
 
-import Main from "./pages/Main";
-import Options from "./pages/Options";
+import useSpeechToText from "./hooks/useSpeechToText";
+import useTextToSpeech from "./hooks/useTextToSpeech";
 
+import { Auth, Main, Options } from "./pages";
 import API from "./utils/API";
 
 const Translator: React.FC = (): JSX.Element => {
@@ -21,7 +20,7 @@ const Translator: React.FC = (): JSX.Element => {
   const { textToSpeechAvailable, useTextToSpeechOptions, speaker, muiLists } =
     useTextToSpeech();
 
-  const [page, setPage] = useState<number>(0);
+  const [pageIdx, setPageIdx] = useState<number>(9);
   const [translation, setTranslation] = useState<string>("");
 
   const srcLang = useSpeechToTextOptions[0].lang;
@@ -60,27 +59,52 @@ const Translator: React.FC = (): JSX.Element => {
     }
   }, [speaker, translation, useTextToSpeechOptions]);
 
-  return speechToTextAvailable && textToSpeechAvailable ? (
+  if (!speechToTextAvailable || !textToSpeechAvailable) {
+    return (
+      <>
+        {!speechToTextAvailable && (
+          <Typography> Speech Recognition not available</Typography>
+        )}
+        {!textToSpeechAvailable && (
+          <Typography>Speech Synthesis not available</Typography>
+        )}
+      </>
+    );
+  }
+
+  const getPage = () => {
+    switch (pageIdx) {
+      case 0:
+        return <Main startListening={startListening} />;
+      case 1:
+        return (
+          <Options
+            voicesReady={speaker.voicesReady}
+            useSpeechToTextOptions={useSpeechToTextOptions}
+            useTextToSpeechOptions={useTextToSpeechOptions}
+            muiLists={muiLists}
+          />
+        );
+      case 9:
+        return <Auth />;
+      default:
+        return <Typography>Something went wrong...</Typography>;
+    }
+  };
+
+  return (
     <Container fixed maxWidth="sm">
-      {page === 0 ? (
-        <Main startListening={startListening} />
-      ) : (
-        <Options
-          voicesReady={speaker.voicesReady}
-          useSpeechToTextOptions={useSpeechToTextOptions}
-          useTextToSpeechOptions={useTextToSpeechOptions}
-          muiLists={muiLists}
-        />
-      )}
+      {getPage()}
+
       <Paper sx={{ width: "auto" }} elevation={3}>
         <BottomNavigation
           showLabels
-          value={page}
+          value={pageIdx}
           onChange={(
             _e: React.SyntheticEvent<Element, Event>,
             value: number
           ) => {
-            setPage(value);
+            setPageIdx(value);
           }}
         >
           <BottomNavigationAction label="Main" />
@@ -88,11 +112,6 @@ const Translator: React.FC = (): JSX.Element => {
         </BottomNavigation>
       </Paper>
     </Container>
-  ) : (
-    <>
-      {!speechToTextAvailable && <h1> Speech Recognition not available</h1>}
-      {!textToSpeechAvailable && <h1>Speech Synthesis not available</h1>}
-    </>
   );
 };
 

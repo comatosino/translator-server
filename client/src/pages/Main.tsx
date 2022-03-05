@@ -4,22 +4,20 @@ type MainProps = {
   startListening: () => void;
 };
 
-const Main = (props: MainProps) => {
+const Main = (props: MainProps): JSX.Element => {
   const { startListening } = props;
 
   return (
-    <>
-      <Box
-        sx={{
-          height: "90vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Button onClick={startListening}>Start Listening</Button>
-      </Box>
-    </>
+    <Box
+      sx={{
+        height: "90vh",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+      }}
+    >
+      <Button onClick={startListening}>Start Listening</Button>
+    </Box>
   );
 };
 
