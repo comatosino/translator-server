@@ -14,11 +14,14 @@ import useTextToSpeech from "./hooks/useTextToSpeech";
 import { Auth, Main, Options } from "./pages";
 import API from "./utils/API";
 
-import { USER_STATE_DEFAULTS } from "./utils/defaultOptions";
+import { USER_STATE_DEFAULTS } from "./utils/DEFAULTS";
 import userReducer from "./store/user/reducer";
 
 const Translator: React.FC = (): JSX.Element => {
-  const [user, dispatchUserUpdate] = useReducer(userReducer, USER_STATE_DEFAULTS);
+  const [user, dispatchUserUpdate] = useReducer(
+    userReducer,
+    USER_STATE_DEFAULTS
+  );
 
   const { speechToTextAvailable, useSpeechToTextOptions, microphone } =
     useSpeechToText();

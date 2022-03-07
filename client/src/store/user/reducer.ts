@@ -1,5 +1,5 @@
 import { User, UserState } from "../../types/User";
-import { USER_STATE_DEFAULTS } from "../../utils/defaultOptions";
+import { USER_STATE_DEFAULTS } from "../../utils/DEFAULTS";
 import { Action, CLEAR_USER, SET_FETCHING_STATUS, SET_USER } from "./actions";
 import { setFetchingStatus, setUser } from "./reducer_functions";
 

@@ -1,5 +1,5 @@
 import { User } from "../../types/User";
-import { USER_STATE_DEFAULTS } from "../../utils/defaultOptions";
+import { USER_STATE_DEFAULTS } from "../../utils/DEFAULTS";
 
 export type Action = {
   type: string;

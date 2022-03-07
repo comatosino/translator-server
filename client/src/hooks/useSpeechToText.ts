@@ -6,7 +6,7 @@ import SpeechToTextOptions from "../types/SpeechToTextOptions";
 import UseSpeechToTextReturn from "../types/UseSpeechToTextReturn";
 import Microphone from "../types/Microphone";
 
-import { SPEECH_TO_TEXT_DEFAULTS } from "../utils/defaultOptions";
+import { SPEECH_TO_TEXT_DEFAULTS } from "../utils/DEFAULTS";
 
 const useSpeechToText = (): UseSpeechToTextReturn => {
   const speechToTextAvailable = SpeechToText.isSupported();
