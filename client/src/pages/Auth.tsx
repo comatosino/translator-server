@@ -10,7 +10,7 @@ const CLEAR = {
 
 const Auth = (): JSX.Element => {
   const [form, setForm] = useState("login");
-  const [formData, setFormData] = useState(CLEAR);
+  const [formData, setFormData] = useState(() => CLEAR);
 
   const clearInputs = () => {
     setFormData(() => CLEAR);
@@ -28,6 +28,7 @@ const Auth = (): JSX.Element => {
   const handleFormSubmit = () => {
     if (!formData.username.length || !formData.password.length) return;
 
+    // CALL THUNKS HERE
     if (form === "login") {
       API.login(formData.username, formData.password);
     } else {
