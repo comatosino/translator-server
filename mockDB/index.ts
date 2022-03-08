@@ -1,7 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
-
-import { User } from "../client/src/types/User";
+import User from "./models/User";
 
 export const readDB = async (): Promise<User[]> => {
   const data = await fs.readFile(path.join(__dirname, "/db.json"), "utf8");
