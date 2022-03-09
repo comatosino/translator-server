@@ -1,44 +1,61 @@
-import "dotenv/config";
-import { RequestHandler } from "express";
-import { v4 as uuidv4 } from "uuid";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import { RequestHandler } from "express";
 
-import { readDB, writeDB } from "../mockDB";
+import { v4 as uuidv4 } from "uuid";
 import User from "../mockDB/models/User";
+import { readDB, writeDB } from "../mockDB";
+
+const SECRET_KEY = process.env.SECRET_KEY!;
+
+export const getUser: RequestHandler = async (req, res) => {
+  try {
+    if (!req.userID) return res.status(401).json({ error: "NOT AUTHORIZED" });
+
+    const db = await readDB();
+    const user = db.find((user) => user.id === req.userID);
+
+    if (!user) throw new Error("id provided but user not found");
+
+    res.status(200).json({ profile: { username: user.username } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "ERROR FETCHING USER PROFILE" });
+  }
+};
 
 export const register: RequestHandler = async (req, res) => {
   if (!req.body.username || !req.body.password) {
     return res.status(400).json({ error: "Username and password required" });
   }
+
   if (req.body.password.length < 8) {
     return res.status(400).json({ error: "Password too short" });
   }
 
   try {
     const db = await readDB();
-    const user = db.find((user) => user.username === req.body.username);
+    const existingUser = db.find((user) => user.username === req.body.username);
 
-    if (user) {
+    if (existingUser) {
       return res.status(401).json({ error: "User already exists" });
-    } else {
-      const hashedPassword = await bcrypt.hash(req.body.password, 10);
-      const newUser: User = {
-        id: uuidv4(),
-        username: req.body.username,
-        password: hashedPassword,
-      };
-      db.push(newUser);
-      await writeDB(db);
-
-      const token = jwt.sign(newUser, process.env.JWT_SECRET!, {
-        expiresIn: 86400,
-      });
-
-      res.status(201).json({ user, token });
     }
+
+    const newUser: User = {
+      id: uuidv4(),
+      username: req.body.username,
+      password: await bcrypt.hash(req.body.password, 10),
+    };
+    db.push(newUser);
+    await writeDB(db);
+
+    const token = jwt.sign({ userID: newUser.id }, SECRET_KEY, {
+      expiresIn: "24h",
+    });
+
+    res.status(201).json({ profile: { username: newUser.username }, token });
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 };
 
@@ -53,15 +70,20 @@ export const login: RequestHandler = async (req, res) => {
 
     if (!user) {
       res.status(401).json({ error: "Wrong username and/or password" });
-    } else if (!(await bcrypt.compare(user.password, req.body.password))) {
+    } else if (!(await bcrypt.compare(req.body.password, user.password))) {
       res.status(401).json({ error: "Wrong username and/or password" });
     } else {
-      const token = jwt.sign(user, process.env.JWT_SECRET!, {
-        expiresIn: 86400,
+      const token = jwt.sign({ userID: user.id }, SECRET_KEY, {
+        expiresIn: "24h",
       });
-      res.status(200).json({ user, token });
+
+      res.status(200).json({ profile: { username: user.username }, token });
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
+};
+
+export const logout: RequestHandler = async (req, res) => {
+  req.userID ? res.sendStatus(204) : res.sendStatus(403);
 };
