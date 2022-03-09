@@ -1,33 +1,53 @@
-import axios from "axios";
+import axios, { AxiosRequestHeaders } from "axios";
+import { UserProfile } from "../store/userSlice";
+
+axios.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("translator-token");
+    if (token) {
+      const headers: AxiosRequestHeaders = {
+        authorization: `Bearer ${token}`,
+      };
+      config["headers"] = headers;
+    }
+    return config;
+  },
+  (error) => console.error(error)
+);
+
+export type Credentials = {
+  username: string;
+  password: string;
+};
+
+export type AppApiGetUserResponse = {
+  profile: UserProfile;
+};
+
+export type AppApiAuthResponse = {
+  token: "string";
+  profile: UserProfile;
+};
 
 export default class API {
-  static translate = async (srcLang: string, trgLang: string, text: string) => {
-    try {
-      const url = `api/translate`;
-      const body = { srcLang, trgLang, text };
-      return axios.post(url, body);
-    } catch (error) {
-      console.log(error);
-    }
+  static getUser = async () => {
+    const url = `auth/user`;
+    return axios.get<AppApiGetUserResponse>(url);
   };
 
-  static login = async (username: string, password: string) => {
-    try {
-      const url = `auth/login`;
-      const body = { username, password };
-      return axios.post(url, body);
-    } catch (error) {
-      console.log(error);
-    }
+  static register = async (credentials: Credentials) => {
+    const url = `auth/register`;
+    return axios.post<AppApiAuthResponse>(url, credentials);
   };
 
-  static register = async (username: string, password: string) => {
-    try {
-      const url = `auth/register`;
-      const body = { username, password };
-      return axios.post(url, body);
-    } catch (error) {
-      console.log(error);
-    }
+  static login = async (credentials: Credentials) => {
+    const url = `auth/login`;
+    return axios.post<AppApiAuthResponse>(url, credentials);
+  };
+
+  static logout = async () => {
+    console.log("API LOGOUT");
+    const url = `auth/logout`;
+    return axios.delete(url);
   };
 }
