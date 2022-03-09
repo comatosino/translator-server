@@ -5,7 +5,7 @@ import User from "./models/User";
 export const readDB = async (): Promise<User[]> => {
   const data = await fs.readFile(path.join(__dirname, "/db.json"), "utf8");
   const parsedData = JSON.parse(data);
-  return parsedData.users;
+  return parsedData;
 };
 
 export const writeDB = async (data: User[]) => {
