@@ -8,7 +8,7 @@ import UseTextToSpeechReturn from "../types/UseTextToSpeechReturn";
 import Speaker from "../types/Speaker";
 import MuiLists from "../types/MuiLists";
 
-import { TEXT_TO_SPEECH_DEFAULTS } from "../utils/defaultOptions";
+import { TEXT_TO_SPEECH_DEFAULTS } from "../utils/DEFAULTS";
 
 const useTextToSpeech = (): UseTextToSpeechReturn => {
   const textToSpeechAvailable = TextToSpeech.isSupported();

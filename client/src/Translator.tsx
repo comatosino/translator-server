@@ -6,21 +6,36 @@ import {
   BottomNavigationAction,
   Paper,
   Typography,
+  Button,
 } from "@mui/material";
 
 import useSpeechToText from "./hooks/useSpeechToText";
 import useTextToSpeech from "./hooks/useTextToSpeech";
+import { useAppDispatch } from "./store/hooks";
 
 import { Auth, Main, Options } from "./pages";
-import API from "./utils/API";
+
+import { getUser, logout } from "./store/userSlice/thunks";
 
 const Translator: React.FC = (): JSX.Element => {
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    const token = localStorage.getItem("translator-token");
+    if (token) {
+      console.log("TOKEN FOUND: AUTHORIZING...");
+      dispatch(getUser());
+    } else {
+      console.log("NO TOKEN");
+    }
+  }, [dispatch]);
+
   const { speechToTextAvailable, useSpeechToTextOptions, microphone } =
     useSpeechToText();
   const { textToSpeechAvailable, useTextToSpeechOptions, speaker, muiLists } =
     useTextToSpeech();
 
-  const [pageIdx, setPageIdx] = useState<number>(9);
+  const [pageIdx, setPage] = useState<number>(9);
   const [translation, setTranslation] = useState<string>("");
 
   const srcLang = useSpeechToTextOptions[0].lang;
@@ -34,10 +49,9 @@ const Translator: React.FC = (): JSX.Element => {
   const translate = useCallback(
     async (text: string) => {
       try {
-        const response = await API.translate(srcLang, trgLang, text);
-        console.log(response);
-        // const result = response.data.data.translations[0].translatedText;
-        // setTranslation(result);
+        console.log("TRANSLATE");
+        console.log(text);
+        console.log(`FROM ${srcLang} TO ${trgLang}`);
       } catch (error) {
         console.log(error);
       }
@@ -72,6 +86,10 @@ const Translator: React.FC = (): JSX.Element => {
     );
   }
 
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
   const getPage = () => {
     switch (pageIdx) {
       case 0:
@@ -96,6 +114,8 @@ const Translator: React.FC = (): JSX.Element => {
     <Container fixed maxWidth="sm">
       {getPage()}
 
+      <Button onClick={handleLogout}>logout</Button>
+
       <Paper sx={{ width: "auto" }} elevation={3}>
         <BottomNavigation
           showLabels
@@ -104,7 +124,7 @@ const Translator: React.FC = (): JSX.Element => {
             _e: React.SyntheticEvent<Element, Event>,
             value: number
           ) => {
-            setPageIdx(value);
+            setPage(value);
           }}
         >
           <BottomNavigationAction label="Main" />

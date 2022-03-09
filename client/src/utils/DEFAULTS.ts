@@ -1,5 +1,6 @@
 import SpeechToTextOptions from "../types/SpeechToTextOptions";
 import TextToSpeechOptions from "../types/TextToSpeechOptions";
+import { UserState } from "../types/User";
 
 export const SPEECH_TO_TEXT_DEFAULTS: SpeechToTextOptions = {
   lang: "",
@@ -12,4 +13,10 @@ export const TEXT_TO_SPEECH_DEFAULTS: TextToSpeechOptions = {
   pitch: 1,
   rate: 1,
   volume: 1,
+};
+
+export const USER_STATE_DEFAULTS: UserState = {
+  id: "",
+  username: "",
+  fetching: false,
 };
