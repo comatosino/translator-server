@@ -1,7 +1,8 @@
 import { ChangeEventHandler, useState } from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 
-import API from "../utils/API";
+import { useAppDispatch } from "../store/hooks";
+import { register, login } from "../store/userSlice/thunks";
 
 const CLEAR = {
   username: "",
@@ -11,6 +12,7 @@ const CLEAR = {
 const Auth = (): JSX.Element => {
   const [form, setForm] = useState("login");
   const [formData, setFormData] = useState(() => CLEAR);
+  const dispatch = useAppDispatch();
 
   const clearInputs = () => {
     setFormData(() => CLEAR);
@@ -27,16 +29,18 @@ const Auth = (): JSX.Element => {
 
   const handleFormSubmit = () => {
     if (!formData.username.length || !formData.password.length) return;
+    const credentials = {
+      username: formData.username,
+      password: formData.password,
+    };
 
-    // CALL THUNKS HERE
-    if (form === "login") {
-      API.login(formData.username, formData.password);
-    } else {
-      API.register(formData.username, formData.password);
-    }
+    form === "register"
+      ? dispatch(register(credentials))
+      : dispatch(login(credentials));
     clearInputs();
   };
 
+  // LOGIN
   if (form === "login")
     return (
       <Box
@@ -75,6 +79,7 @@ const Auth = (): JSX.Element => {
       </Box>
     );
 
+  // SIGNUP
   return (
     <Box
       sx={{
