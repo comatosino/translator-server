@@ -1,8 +1,9 @@
-import "dotenv/config";
 import { RequestHandler } from "express";
 import axios, { AxiosRequestConfig } from "axios";
 
 export const translate: RequestHandler = async (req, res) => {
+  if (!req.userID) res.sendStatus(403);
+
   try {
     const { srcLang, trgLang, text } = req.body;
 
@@ -17,7 +18,7 @@ export const translate: RequestHandler = async (req, res) => {
           Accept: "application/json",
         },
         params: {
-          key: `${process.env.GOOGLE_MAPS_API_KEY}`,
+          key: `${process.env.GOOGLE_TRANSLATE_API_KEY}`,
         },
       };
 
