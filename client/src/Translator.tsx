@@ -1,4 +1,5 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
+import useSpeechToText from "./hooks/useSpeechToText";
 
 import {
   Container,
@@ -9,117 +10,102 @@ import {
   Button,
 } from "@mui/material";
 
-import useSpeechToText from "./hooks/useSpeechToText";
-import useTextToSpeech from "./hooks/useTextToSpeech";
 import { useAppDispatch } from "./store/hooks";
+import { getUser } from "./store/userSlice/thunks";
 
-import { Auth, Main, Options } from "./pages";
-
-import { getUser, logout } from "./store/userSlice/thunks";
+import { Auth, Loading } from "./pages";
 
 const Translator: React.FC = (): JSX.Element => {
   const dispatch = useAppDispatch();
 
+  const [page, setPage] = useState<number>(0);
+
   useEffect(() => {
     const token = localStorage.getItem("translator-token");
-    if (token) {
-      console.log("TOKEN FOUND: AUTHORIZING...");
-      dispatch(getUser());
-    } else {
-      console.log("NO TOKEN");
-    }
+    if (token) dispatch(getUser());
   }, [dispatch]);
 
-  const { speechToTextAvailable, useSpeechToTextOptions, microphone } =
+  const { speechToTextAvailable, microphone, transcript, options } =
     useSpeechToText();
-  const { textToSpeechAvailable, useTextToSpeechOptions, speaker, muiLists } =
-    useTextToSpeech();
 
-  const [pageIdx, setPage] = useState<number>(9);
-  const [translation, setTranslation] = useState<string>("");
-
-  const srcLang = useSpeechToTextOptions[0].lang;
-  const trgLang = useTextToSpeechOptions[0].voice.substring(0, 5);
-
-  const startListening = (): void => {
-    setTranslation("");
-    microphone.listen();
+  // FOR REACT DEV TOOLS HOOK PARSING
+  const useTranslation = (
+    init = ""
+  ): [string, React.Dispatch<React.SetStateAction<string>>] => {
+    const [t, sT] = useState(init);
+    return [t, sT];
   };
+  const [translation, setTranslation] = useTranslation("");
 
-  const translate = useCallback(
-    async (text: string) => {
-      try {
-        console.log("TRANSLATE");
-        console.log(text);
-        console.log(`FROM ${srcLang} TO ${trgLang}`);
-      } catch (error) {
-        console.log(error);
-      }
-    },
-    [srcLang, trgLang]
-  );
+  // const srcLang = useSpeechToTextOptions[0].lang;
+  // const trgLang = useTextToSpeechOptions[0].voice.substring(0, 5);
 
-  useEffect(() => {
-    if (microphone.transcript) {
-      translate(microphone.transcript);
-    }
-  }, [microphone.transcript, translate]);
+  // const startListening = (): void => {
+  //   setTranslation("");
+  //   // microphone.listen();
+  // };
 
-  useEffect(() => {
-    if (translation) {
-      const options = useTextToSpeechOptions[0];
-      speaker.speak(translation, options);
-      setTranslation("");
-    }
-  }, [speaker, translation, useTextToSpeechOptions]);
+  // const translate = useCallback(
+  //   async (text: string) => {
+  //     try {
+  //       console.log("TRANSLATE");
+  //       console.log(text);
+  //       // console.log(`FROM ${srcLang} TO ${trgLang}`);
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   },
+  //   []
+  // );
 
-  if (!speechToTextAvailable || !textToSpeechAvailable) {
-    return (
-      <>
-        {!speechToTextAvailable && (
-          <Typography> Speech Recognition not available</Typography>
-        )}
-        {!textToSpeechAvailable && (
-          <Typography>Speech Synthesis not available</Typography>
-        )}
-      </>
-    );
-  }
+  // useEffect(() => {
+  //   if (microphone.transcript) {
+  //     translate(microphone.transcript);
+  //   }
+  // }, [microphone.transcript, translate]);
 
-  const handleLogout = () => {
-    dispatch(logout());
-  };
+  // useEffect(() => {
+  //   if (translation) {
+  //     const options = useTextToSpeechOptions[0];
+  //     speaker.speak(translation, options);
+  //     setTranslation("");
+  //   }
+  // }, [speaker, translation, useTextToSpeechOptions]);
 
-  const getPage = () => {
-    switch (pageIdx) {
-      case 0:
-        return <Main startListening={startListening} />;
-      case 1:
-        return (
-          <Options
-            voicesReady={speaker.voicesReady}
-            useSpeechToTextOptions={useSpeechToTextOptions}
-            useTextToSpeechOptions={useTextToSpeechOptions}
-            muiLists={muiLists}
-          />
-        );
-      case 9:
-        return <Auth />;
-      default:
-        return <Typography>Something went wrong...</Typography>;
-    }
-  };
+  // if (!speechToTextAvailable) {
+  //   return (
+  //     <>
+  //       {!speechToTextAvailable && (
+  //         <Typography> Speech Recognition not available</Typography>
+  //       )}
+  //       {/* {!textToSpeechAvailable && (
+  //         <Typography>Speech Synthesis not available</Typography>
+  //       )} */}
+  //     </>
+  //   );
+  // }
+
+  // const handleLogout = () => {
+  //   dispatch(logout());
+  // };
+
+  if (!speechToTextAvailable)
+    return <Typography> Speech Recognition not available</Typography>;
 
   return (
-    <Container fixed maxWidth="sm">
-      {getPage()}
+    <Container fixed maxWidth="sm" sx={{ height: 1 }}>
+      {page === 0 && <Loading />}
+      {page === 1 && <Auth />}
+      {/* {page === 2 && <Register />} */}
+      {/* {page === 3 && <Main />} */}
+      {/* {page === 4 && <Options />} */}
 
-      <Button onClick={handleLogout}>logout</Button>
+      {/* <Button onClick={handleLogout}>logout</Button> */}
 
-      <Paper sx={{ width: "auto" }} elevation={3}>
+      {/* <Paper sx={{ width: "auto" }} elevation={3}>
         <BottomNavigation
           showLabels
-          value={pageIdx}
+          value={page}
           onChange={(
             _e: React.SyntheticEvent<Element, Event>,
             value: number
@@ -127,10 +113,10 @@ const Translator: React.FC = (): JSX.Element => {
             setPage(value);
           }}
         >
-          <BottomNavigationAction label="Main" />
-          <BottomNavigationAction label="Options" />
+          <BottomNavigationAction label="Main" value={3} />
+          <BottomNavigationAction label="Options" value={4} />
         </BottomNavigation>
-      </Paper>
+      </Paper> */}
     </Container>
   );
 };

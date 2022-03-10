@@ -44,7 +44,7 @@ export default class SpeechToText {
   }
 
   start() {
-    this.clear();
+    this.clearTranscript();
     this.listening = true;
     this.interface.start();
   }
@@ -55,12 +55,12 @@ export default class SpeechToText {
   }
 
   abort() {
-    this.clear();
+    this.clearTranscript();
     this.listening = false;
     this.interface.abort();
   }
 
-  clear() {
+  clearTranscript() {
     this.transcript = "";
   }
 }
