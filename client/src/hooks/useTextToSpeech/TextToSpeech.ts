@@ -11,11 +11,9 @@ export default class TextToSpeech {
       const voicesArr = this.interface.getVoices();
       this.voices = voicesArr.reduce(
         (voiceMap: SpeechSynthesisVoiceMap, voice: SpeechSynthesisVoice) => {
-          if (voiceMap[voice.lang]) {
-            voiceMap[voice.lang].push(voice);
-          } else {
-            voiceMap[voice.lang] = [voice];
-          }
+          voiceMap[voice.lang]
+            ? voiceMap[voice.lang].push(voice)
+            : (voiceMap[voice.lang] = [voice]);
           return voiceMap;
         },
         {}
