@@ -15,7 +15,7 @@ export const getUser: RequestHandler = async (req, res) => {
     const db = await readDB();
     const user = db.find((user) => user.id === req.userID);
 
-    if (!user) throw new Error("id provided but user not found");
+    if (!user) throw new Error("USER NOT FOUND");
 
     res.status(200).json({ profile: { username: user.username } });
   } catch (error) {
