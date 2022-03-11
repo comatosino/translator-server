@@ -2,6 +2,7 @@ import SpeechToText from "./SpeechToText";
 
 export type Microphone = {
   listening: boolean;
+  transcript: string;
   listen: () => void;
   stop: () => void;
   abort: () => void;
@@ -12,7 +13,6 @@ export type UseSpeechToTextReturn = {
   speechToTextAvailable: boolean;
   microphone: Microphone;
   options: SpeechToTextOptions;
-  transcript: string;
 };
 
 export type SpeechToTextOptions = {
