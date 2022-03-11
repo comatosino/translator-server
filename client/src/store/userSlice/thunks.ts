@@ -1,10 +1,10 @@
+import { setFetching, setUser, clearUser } from ".";
 import { AppThunk } from "..";
-import { setFetchingStatus, setUser, clearUser } from ".";
 import API, { Credentials } from "../../utils/API";
 
 export const getUser = (): AppThunk => async (dispatch) => {
   try {
-    dispatch(setFetchingStatus(true));
+    dispatch(setFetching(true));
     const response = await API.getUser();
     const { profile } = response.data;
     dispatch(setUser(profile));
@@ -12,7 +12,7 @@ export const getUser = (): AppThunk => async (dispatch) => {
     console.error(error);
     localStorage.removeItem("translator-token");
   } finally {
-    dispatch(setFetchingStatus(false));
+    dispatch(setFetching(false));
   }
 };
 
@@ -20,6 +20,7 @@ export const register =
   (credentials: Credentials): AppThunk =>
   async (dispatch) => {
     try {
+      dispatch(setFetching(true));
       const response = await API.register(credentials);
       const { profile, token } = response.data;
       localStorage.setItem("translator-token", token);
@@ -27,6 +28,9 @@ export const register =
     } catch (error) {
       console.error(error);
       localStorage.removeItem("translator-token");
+      dispatch(clearUser());
+    } finally {
+      dispatch(setFetching(false));
     }
   };
 
@@ -34,6 +38,7 @@ export const login =
   (credentials: Credentials): AppThunk =>
   async (dispatch) => {
     try {
+      dispatch(setFetching(true));
       const response = await API.login(credentials);
       const { profile, token } = response.data;
       localStorage.setItem("translator-token", token);
@@ -41,17 +46,21 @@ export const login =
     } catch (error) {
       console.error(error);
       localStorage.removeItem("translator-token");
+      dispatch(clearUser());
+    } finally {
+      dispatch(setFetching(false));
     }
   };
 
-export const logout = (): AppThunk => async (dispatch, getState) => {
+export const logout = (): AppThunk => async (dispatch) => {
   try {
-    console.log("LOGGING OUT");
+    dispatch(setFetching(true));
     await API.logout();
-    dispatch(clearUser());
   } catch (error) {
     console.error(error);
   } finally {
     localStorage.removeItem("translator-token");
+    dispatch(clearUser());
+    dispatch(setFetching(false));
   }
 };
