@@ -59,7 +59,7 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
         dispatch(setPitch(pitch));
       },
     };
-  }, [state, dispatch]);
+  }, [state]);
 
   return { textToSpeechAvailable, speaker, options };
 };
