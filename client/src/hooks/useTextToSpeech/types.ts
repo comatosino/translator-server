@@ -29,12 +29,15 @@ export type UseTextToSpeechReturn = {
 };
 
 export type TextToSpeechOptions = {
-  dispatch: React.Dispatch<TextToSpeechReducerAction>;
-  selectedVoice: SpeechSynthesisVoice | null;
   voices: SpeechSynthesisVoiceMap | null;
+  selectedVoice: SpeechSynthesisVoice | null;
+  setSelectedVoice: (selectedVoice: SpeechSynthesisVoice) => void;
   volume: number | number[]; // between 0 (lowest) and 1 (highest)
+  setVolume: (volume: number) => void;
   pitch: number | number[]; // range between 0 (lowest) and 2 (highest)
+  setPitch: (pitch: number) => void;
   rate: number | number[]; // between 0.1 (lowest) and 10 (highest)
+  setRate: (rate: number) => void;
 };
 
 export enum TextToSpeechActions {

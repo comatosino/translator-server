@@ -1,5 +1,11 @@
-import { useEffect, useReducer } from "react";
-import { setVoices } from "./store/actions";
+import { useEffect, useMemo, useReducer } from "react";
+import {
+  setPitch,
+  setRate,
+  setSelectedVoice,
+  setVoices,
+  setVolume,
+} from "./store/actions";
 import INITIAL_STATE from "./store/init";
 import textToSpeechReducer from "./store/reducer";
 import TextToSpeech from "./TextToSpeech";
@@ -8,17 +14,17 @@ import { UseTextToSpeechReturn, TextToSpeechOptions, Speaker } from "./types";
 
 const useTextToSpeech = (): UseTextToSpeechReturn => {
   const textToSpeechAvailable = TextToSpeech.isSupported();
-  const [manager, dispatch] = useReducer(textToSpeechReducer, INITIAL_STATE);
-  const { textToSpeech } = manager;
+  const [state, dispatch] = useReducer(textToSpeechReducer, INITIAL_STATE);
+  const { textToSpeech } = state;
 
   useEffect(() => {
-    if (textToSpeech.voices) {
+    if (textToSpeechAvailable && textToSpeech.voices) {
       dispatch(setVoices(textToSpeech.voices));
     }
-  }, [textToSpeech.voices]);
+  }, [textToSpeechAvailable, textToSpeech.voices]);
 
   const speaker: Speaker = {
-    speaking: manager.speaking,
+    speaking: state.speaking,
     speak(text: string, options: TextToSpeechOptions) {
       textToSpeech.speak(text, options);
     },
@@ -33,14 +39,27 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
     },
   };
 
-  const options: TextToSpeechOptions = {
-    dispatch,
-    selectedVoice: manager.selectedVoice,
-    voices: manager.voices,
-    volume: manager.volume,
-    rate: manager.rate,
-    pitch: manager.pitch,
-  };
+  const options = useMemo((): TextToSpeechOptions => {
+    return {
+      voices: state.voices,
+      selectedVoice: state.selectedVoice,
+      setSelectedVoice: (selectedVoice: SpeechSynthesisVoice) => {
+        dispatch(setSelectedVoice(selectedVoice));
+      },
+      volume: state.volume,
+      setVolume: (volume: number) => {
+        dispatch(setVolume(volume));
+      },
+      rate: state.rate,
+      setRate: (rate: number) => {
+        dispatch(setRate(rate));
+      },
+      pitch: state.pitch,
+      setPitch: (pitch: number) => {
+        dispatch(setPitch(pitch));
+      },
+    };
+  }, [state, dispatch]);
 
   return { textToSpeechAvailable, speaker, options };
 };

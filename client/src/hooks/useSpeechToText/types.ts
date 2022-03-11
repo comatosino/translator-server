@@ -16,10 +16,12 @@ export type UseSpeechToTextReturn = {
 };
 
 export type SpeechToTextOptions = {
-  dispatch: React.Dispatch<SpeechToTextReducerAction>;
   language: string;
+  setLanguage: (lang: string) => void;
   continuous: boolean;
+  setContinuous: (continuous: boolean) => void;
   interimResults: boolean;
+  setInterimResults: (interimResults: boolean) => void;
 };
 
 export type SpeechToTextState = {
