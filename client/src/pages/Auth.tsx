@@ -9,14 +9,12 @@ const CLEAR = {
   password: "",
 };
 
-const Auth = (): JSX.Element => {
+const Auth: React.FC<{}> = (): JSX.Element => {
   const [form, setForm] = useState("login");
   const [formData, setFormData] = useState(() => CLEAR);
   const dispatch = useAppDispatch();
 
-  const clearInputs = () => {
-    setFormData(() => CLEAR);
-  };
+  const clearInputs = () => setFormData(() => CLEAR);
 
   const handleInputChange: ChangeEventHandler<HTMLInputElement> = (e) => {
     const { name, value } = e.target;
@@ -29,6 +27,7 @@ const Auth = (): JSX.Element => {
 
   const handleFormSubmit = () => {
     if (!formData.username.length || !formData.password.length) return;
+
     const credentials = {
       username: formData.username,
       password: formData.password,
