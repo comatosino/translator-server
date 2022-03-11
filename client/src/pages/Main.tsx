@@ -1,22 +1,20 @@
 import { Box, Button } from "@mui/material";
 
-type MainProps = {
-  startListening: () => void;
-};
+// type MainProps = {
+//   startListening: () => void;
+// };
 
-const Main = (props: MainProps): JSX.Element => {
-  const { startListening } = props;
-
+const Main: React.FC = (): JSX.Element => {
   return (
     <Box
       sx={{
-        height: "90vh",
+        height: 1,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
       }}
     >
-      <Button onClick={startListening}>Start Listening</Button>
+      <Button>Start Listening</Button>
     </Box>
   );
 };
