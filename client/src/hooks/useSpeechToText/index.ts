@@ -82,8 +82,8 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
   return {
     speechToTextAvailable,
     microphone,
-    options,
     transcript: manager.transcript,
+    options,
   };
 };
 
