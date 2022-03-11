@@ -1,41 +1,35 @@
-import React, { useEffect, useState } from "react";
+import { Container } from "@mui/material";
+import { useState, useEffect } from "react";
 import useSpeechToText from "./hooks/useSpeechToText";
 
-import {
-  Container,
-  BottomNavigation,
-  BottomNavigationAction,
-  Paper,
-  Typography,
-  Button,
-} from "@mui/material";
-
-import { useAppDispatch } from "./store/hooks";
+import { Loading, Auth } from "./pages";
+import { useAppSelector, useAppDispatch } from "./store/hooks";
 import { getUser } from "./store/userSlice/thunks";
 
-import { Auth, Loading } from "./pages";
-
 const Translator: React.FC = (): JSX.Element => {
-  const dispatch = useAppDispatch();
-
   const [page, setPage] = useState<number>(0);
+
+  // USER STATE/DISPATCH
+  const userProfile = useAppSelector((state) => state.user.profile);
+  const userDispatch = useAppDispatch();
+
+  useSpeechToText();
 
   useEffect(() => {
     const token = localStorage.getItem("translator-token");
-    if (token) dispatch(getUser());
-  }, [dispatch]);
+    if (token) userDispatch(getUser());
+  }, [userDispatch]);
 
-  const { speechToTextAvailable, microphone, transcript, options } =
-    useSpeechToText();
+  console.log(userProfile);
 
   // FOR REACT DEV TOOLS HOOK PARSING
-  const useTranslation = (
-    init = ""
-  ): [string, React.Dispatch<React.SetStateAction<string>>] => {
-    const [t, sT] = useState(init);
-    return [t, sT];
-  };
-  const [translation, setTranslation] = useTranslation("");
+  // const useTranslation = (
+  //   init = ""
+  // ): [string, React.Dispatch<React.SetStateAction<string>>] => {
+  //   const [t, sT] = useState(init);
+  //   return [t, sT];
+  // };
+  // const [translation, setTranslation] = useTranslation("");
 
   // const srcLang = useSpeechToTextOptions[0].lang;
   // const trgLang = useTextToSpeechOptions[0].voice.substring(0, 5);
@@ -89,16 +83,12 @@ const Translator: React.FC = (): JSX.Element => {
   //   dispatch(logout());
   // };
 
-  if (!speechToTextAvailable)
-    return <Typography> Speech Recognition not available</Typography>;
-
   return (
     <Container fixed maxWidth="sm" sx={{ height: 1 }}>
       {page === 0 && <Loading />}
       {page === 1 && <Auth />}
-      {/* {page === 2 && <Register />} */}
-      {/* {page === 3 && <Main />} */}
-      {/* {page === 4 && <Options />} */}
+      {/* {page === 2 && <Main />} */}
+      {/* {page === 3 && <Options />} */}
 
       {/* <Button onClick={handleLogout}>logout</Button> */}
 
