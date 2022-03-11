@@ -1,5 +1,4 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootState } from "..";
 
 export interface UserProfile {
   username?: string;
@@ -14,7 +13,7 @@ export interface UserState {
 export const initialState: UserState = {
   profile: null,
   error: "",
-  fetching: false,
+  fetching: true,
 };
 
 export const userSlice = createSlice({
@@ -27,7 +26,7 @@ export const userSlice = createSlice({
     clearUser: (state) => {
       state.profile = null;
     },
-    setFetchingStatus: (state, action: PayloadAction<boolean>) => {
+    setFetching: (state, action: PayloadAction<boolean>) => {
       state.fetching = action.payload;
     },
     setError: (state, action: PayloadAction<string>) => {
@@ -36,10 +35,6 @@ export const userSlice = createSlice({
   },
 });
 
-// ACTIONS
-export const { setUser, clearUser, setFetchingStatus } = userSlice.actions;
-
-// SELECTORS
-export const selectUserProfile = (state: RootState) => state.user.profile;
+export const { setUser, clearUser, setFetching, setError } = userSlice.actions;
 
 export default userSlice.reducer;

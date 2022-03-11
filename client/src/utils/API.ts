@@ -46,7 +46,6 @@ export default class API {
   };
 
   static logout = async () => {
-    console.log("API LOGOUT");
     const url = `auth/logout`;
     return axios.delete(url);
   };
