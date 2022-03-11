@@ -1,9 +1,15 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 import SpeechToText from "./SpeechToText";
 import INITIAL_STATE from "./store/init";
-
-import { setTranscript, clearTranscript, setListening } from "./store/actions";
-import reducer from "./store/reducer";
+import {
+  setTranscript,
+  clearTranscript,
+  setListening,
+  setLang,
+  setContinuous,
+  setInterimResults,
+} from "./store/actions";
+import speechToTextReducer from "./store/reducer";
 import {
   Microphone,
   SpeechToTextOptions,
@@ -12,12 +18,12 @@ import {
 
 const useSpeechToText = (): UseSpeechToTextReturn => {
   const speechToTextAvailable = SpeechToText.isSupported();
-  const [manager, dispatch] = useReducer(reducer, INITIAL_STATE);
-  const { speechToText } = manager;
+  const [state, dispatch] = useReducer(speechToTextReducer, INITIAL_STATE);
+  const { speechToText } = state;
 
   useEffect(() => {
     if (speechToTextAvailable) {
-      speechToText.interface.onstart = (e: Event) => {
+      speechToText.interface.onstart = (_e: Event) => {
         speechToText.clearTranscript();
         dispatch(clearTranscript());
         speechToText.listening = true;
@@ -54,10 +60,10 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
       dispatch(setListening(false));
       throw new Error(e.error);
     };
-  }, [speechToText, speechToTextAvailable]);
+  }, [speechToTextAvailable, speechToText]);
 
   const microphone: Microphone = {
-    listening: manager.listening,
+    listening: state.listening,
     async listen() {
       speechToText.start();
     },
@@ -72,17 +78,32 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
     },
   };
 
-  const options: SpeechToTextOptions = {
-    dispatch,
-    language: manager.language,
-    continuous: manager.continuous,
-    interimResults: manager.interimResults,
-  };
+  // TODO: reformat options page to test option thunks
+  // update SpeechRecognition instance running under the hood
+  const options = useMemo((): SpeechToTextOptions => {
+    return {
+      language: state.language,
+      setLanguage: (lang: string): void => {
+        state.speechToText.lang = lang;
+        dispatch(setLang(lang));
+      },
+      continuous: state.continuous,
+      setContinuous: (continuous: boolean) => {
+        state.speechToText.continuous = continuous;
+        dispatch(setContinuous(continuous));
+      },
+      interimResults: state.interimResults,
+      setInterimResults: (interimResults: boolean) => {
+        state.speechToText.interimResults = interimResults;
+        dispatch(setInterimResults(interimResults));
+      },
+    };
+  }, [state, dispatch]);
 
   return {
     speechToTextAvailable,
     microphone,
-    transcript: manager.transcript,
+    transcript: state.transcript,
     options,
   };
 };
