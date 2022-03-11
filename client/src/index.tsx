@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import Translator from "./Translator";
+import App from "./App";
 
 import { Provider } from "react-redux";
 import { store } from "./store";
@@ -13,7 +13,7 @@ import "@fontsource/roboto/700.css";
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={store}>
-      <Translator />
+      <App />
     </Provider>
   </React.StrictMode>,
   document.getElementById("root")
