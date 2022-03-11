@@ -5,7 +5,7 @@ export interface UserProfile {
   username?: string;
 }
 
-export interface UserState extends UserProfile {
+export interface UserState {
   profile: UserProfile | null;
   error: string;
   fetching: boolean;
@@ -36,7 +36,10 @@ export const userSlice = createSlice({
   },
 });
 
+// ACTIONS
 export const { setUser, clearUser, setFetchingStatus } = userSlice.actions;
-export const selectUser = (state: RootState) => state;
+
+// SELECTORS
+export const selectUserProfile = (state: RootState) => state.user.profile;
 
 export default userSlice.reducer;
