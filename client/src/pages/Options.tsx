@@ -14,73 +14,58 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import MuiLists from "../types/MuiLists";
 
-import SpeechToTextOptions from "../types/SpeechToTextOptions";
-import TextToSpeechOptions from "../types/TextToSpeechOptions";
-
-type OptionsProps = {
-  voicesReady: boolean;
-  useSpeechToTextOptions: [
-    SpeechToTextOptions,
-    React.Dispatch<SpeechToTextOptions>
-  ];
-  useTextToSpeechOptions: [
-    TextToSpeechOptions,
-    React.Dispatch<TextToSpeechOptions>
-  ];
-  muiLists: MuiLists;
+export type MuiLists = {
+  srcCodeList: string[];
+  trgCodeList: { type: string; content: string; lang: string }[];
 };
 
-const Options = (props: OptionsProps) => {
-  const {
-    voicesReady,
-    useSpeechToTextOptions,
-    useTextToSpeechOptions,
-    muiLists,
-  } = props;
+// type OptionsProps = {
+//   voicesReady: boolean;
+//   useSpeechToTextOptions: [
+//     SpeechToTextOptions,
+//     React.Dispatch<SpeechToTextOptions>
+//   ];
+//   useTextToSpeechOptions: [
+//     TextToSpeechOptions,
+//     React.Dispatch<TextToSpeechOptions>
+//   ];
+//   muiLists: MuiLists;
+// };
 
-  const [sstOpts, setSstOpts] = useSpeechToTextOptions;
-  const [ttsOpts, setTtsOpts] = useTextToSpeechOptions;
+const Options = () => {
+  // source language select options
+  // creates a list of BCP 47 language tags for display
+  // const srcCodeList = useMemo<string[]>(() => {
+  //   let uniqueLangCodes: string[] = [];
+  //   if (voicesReady) {
+  //     const voices = instance.getVoiceArray();
+  //     const langCodes = voices.map((voice) => voice.lang);
+  //     uniqueLangCodes = [...new Set(langCodes)];
+  //   }
+  //   return uniqueLangCodes;
+  // }, [instance, voicesReady]);
 
-  // SPEECH RECOGNITION OPTIONS
-  const handleSetSourceLang = (e: SelectChangeEvent<string>): void => {
-    setSstOpts({ ...sstOpts, lang: e.target.value });
-  };
+  // target language & voice select options
+  // creates list of objects with info for MUI MenuItem & Subheader components
+  // const trgCodeList = useMemo<MuiLists["trgCodeList"]>(() => {
+  //   let result: MuiLists["trgCodeList"] = [];
+  //   if (instance.voices && voicesReady) {
+  //     const langList = Object.keys(instance.voices);
 
-  const handleSetContinuous = (
-    _e: React.ChangeEvent<HTMLInputElement>,
-    _checked: boolean
-  ): void => {
-    setSstOpts({
-      ...sstOpts,
-      continuous: !sstOpts.continuous,
-    });
-  };
+  //     for (let i = 0; i < langList.length; i++) {
+  //       const langCode = langList[i];
+  //       const langVoices = instance.voices[langCode];
+  //       result.push({ type: "subheader", content: langCode, lang: langCode });
 
-  const handleSetInterim = (
-    _e: React.ChangeEvent<HTMLInputElement>,
-    _checked: boolean
-  ): void => {
-    setSstOpts({ ...sstOpts, interimResults: !sstOpts.interimResults });
-  };
-
-  // SPEECH SYNTHESIS OPTIONS
-  const handleSetTargetLang = (e: SelectChangeEvent<string>): void => {
-    setTtsOpts({ ...ttsOpts, voice: e.target.value });
-  };
-
-  const handleSetVolume = (_e: Event, value: number | number[]): void => {
-    setTtsOpts({ ...ttsOpts, volume: value });
-  };
-
-  const handleSetPitch = (_e: Event, value: number | number[]): void => {
-    setTtsOpts({ ...ttsOpts, pitch: value });
-  };
-
-  const handleSetRate = (_e: Event, value: number | number[]): void => {
-    setTtsOpts({ ...ttsOpts, rate: value });
-  };
+  //       for (let j = 0; j < langVoices.length; j++) {
+  //         const voice = langVoices[j];
+  //         result.push({ type: "item", content: voice.name, lang: voice.lang });
+  //       }
+  //     }
+  //   }
+  //   return result;
+  // }, [instance.voices, voicesReady]);
 
   return (
     <Box
@@ -96,7 +81,7 @@ const Options = (props: OptionsProps) => {
           <Divider>Source Language Options</Divider>
         </Typography>
 
-        <FormControl fullWidth>
+        {/* <FormControl fullWidth>
           <InputLabel id="src-lang">Source Language</InputLabel>
           <Select
             label="Source Language"
@@ -140,13 +125,13 @@ const Options = (props: OptionsProps) => {
             }
             label="Interim Results?"
           />
-        </FormGroup>
+        </FormGroup> */}
 
         <Typography component="h2">
           <Divider>Target Language Options</Divider>
         </Typography>
 
-        <FormControl fullWidth>
+        {/* <FormControl fullWidth>
           <InputLabel id="tgt-lang">Target Language</InputLabel>
           <Select
             label="Target Language"
@@ -183,10 +168,10 @@ const Options = (props: OptionsProps) => {
                 );
               })}
           </Select>
-        </FormControl>
+        </FormControl> */}
 
         <Typography id="volume-slider">Volume</Typography>
-        <Slider
+        {/* <Slider
           disabled
           aria-labelledby="volume-slider"
           value={ttsOpts.volume}
@@ -197,10 +182,10 @@ const Options = (props: OptionsProps) => {
           min={0}
           max={1}
           onChange={handleSetVolume}
-        />
+        /> */}
 
         <Typography id="pitch-slider">Pitch</Typography>
-        <Slider
+        {/* <Slider
           disabled
           aria-labelledby="pitch-slider"
           value={ttsOpts.pitch}
@@ -211,10 +196,10 @@ const Options = (props: OptionsProps) => {
           min={0}
           max={2}
           onChange={handleSetPitch}
-        />
+        /> */}
 
         <Typography id="rate-slider">Rate</Typography>
-        <Slider
+        {/* <Slider
           disabled
           aria-labelledby="rate-slider"
           value={ttsOpts.rate}
@@ -225,7 +210,7 @@ const Options = (props: OptionsProps) => {
           min={0.1}
           max={10}
           onChange={handleSetRate}
-        />
+        /> */}
       </Stack>
     </Box>
   );
