@@ -64,6 +64,7 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
 
   const microphone: Microphone = {
     listening: state.listening,
+    transcript: state.transcript,
     async listen() {
       speechToText.start();
     },
@@ -78,8 +79,6 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
     },
   };
 
-  // TODO: reformat options page to test option thunks
-  // update SpeechRecognition instance running under the hood
   const options = useMemo((): SpeechToTextOptions => {
     return {
       language: state.language,
@@ -98,12 +97,11 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
         dispatch(setInterimResults(interimResults));
       },
     };
-  }, [state, dispatch]);
+  }, [state]);
 
   return {
     speechToTextAvailable,
     microphone,
-    transcript: state.transcript,
     options,
   };
 };
