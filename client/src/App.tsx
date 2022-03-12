@@ -1,12 +1,14 @@
-import {  useEffect } from "react";
-import { Loading, Profile } from "./pages";
+import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "./store/hooks";
-import { setFetching } from "./store/userSlice";
 import { getUser } from "./store/userSlice/thunks";
+import { setFetching } from "./store/userSlice";
+
+import { Profile } from "./pages/auth/";
+import { Loading } from "./pages/app";
 
 const App: React.FC = (): JSX.Element => {
   const userDispatch = useAppDispatch();
-  const fetching = useAppSelector((state) => state.user.fetching);
+  const fetchingUser = useAppSelector((state) => state.user.fetching);
 
   useEffect(() => {
     const token = localStorage.getItem("translator-token");
@@ -14,7 +16,7 @@ const App: React.FC = (): JSX.Element => {
     else userDispatch(setFetching(false));
   }, [userDispatch]);
 
-  return fetching ? <Loading /> : <Profile />;
+  return fetchingUser ? <Loading /> : <Profile />;
 };
 
 export default App;
