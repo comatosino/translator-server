@@ -65,6 +65,11 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
   const microphone: Microphone = {
     listening: state.listening,
     transcript: state.transcript,
+    language: state.language,
+    setLanguage: (lang: string): void => {
+      state.speechToText.lang = lang;
+      dispatch(setLang(lang));
+    },
     async listen() {
       speechToText.start();
     },
@@ -81,11 +86,6 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
 
   const options = useMemo((): SpeechToTextOptions => {
     return {
-      language: state.language,
-      setLanguage: (lang: string): void => {
-        state.speechToText.lang = lang;
-        dispatch(setLang(lang));
-      },
       continuous: state.continuous,
       setContinuous: (continuous: boolean) => {
         state.speechToText.continuous = continuous;
