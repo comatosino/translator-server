@@ -23,14 +23,26 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
     }
   }, [textToSpeechAvailable, textToSpeech.voices]);
 
+  // set a default voice
+  useEffect(() => {
+    if (textToSpeechAvailable && textToSpeech.voices) {
+      const voices = textToSpeech.voices;
+      const localVoice = voices[navigator.language][0];
+      dispatch(setSelectedVoice(localVoice));
+    }
+  }, [textToSpeechAvailable, textToSpeech.voices]);
+
   const speaker = useMemo((): Speaker => {
     return {
-      speaking: state.speaking,
       selectedVoice: state.selectedVoice,
-      getVoiceMap: () => textToSpeech.getVoiceMap(),
-      getVoiceArray: () => textToSpeech.getVoiceArray(),
       setSelectedVoice: (selectedVoice: SpeechSynthesisVoice) => {
-        dispatch(setSelectedVoice(selectedVoice));
+        dispatch(setSelectedVoice(selectedVoice!));
+      },
+      getVoiceMap: () => {
+        return textToSpeech.getVoiceMap();
+      },
+      getVoiceArray: () => {
+        return textToSpeech.getVoiceArray();
       },
       speak(text: string, options: TextToSpeechOptions) {
         textToSpeech.speak(text, options);
@@ -45,7 +57,7 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
         textToSpeech.cancel();
       },
     };
-  }, [state, textToSpeech]);
+  }, [state.selectedVoice, textToSpeech]);
 
   const options = useMemo((): TextToSpeechOptions => {
     return {
@@ -62,7 +74,7 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
         dispatch(setPitch(pitch));
       },
     };
-  }, [state]);
+  }, [state.pitch, state.rate, state.volume]);
 
   return { textToSpeechAvailable, speaker, options };
 };
