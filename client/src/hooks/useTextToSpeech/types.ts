@@ -12,6 +12,10 @@ export type TextToSpeechState = {
 
 export type Speaker = {
   speaking: boolean;
+  selectedVoice: SpeechSynthesisVoice | null;
+  setSelectedVoice: (voice: SpeechSynthesisVoice) => SpeechSynthesisVoice;
+  getVoiceMap: () => SpeechSynthesisVoiceMap;
+  getVoiceArray: () => SpeechSynthesisVoice[];
   speak: (text: string, options: TextToSpeechOptions) => void;
   pause: () => void;
   resume: () => void;
@@ -29,9 +33,6 @@ export type UseTextToSpeechReturn = {
 };
 
 export type TextToSpeechOptions = {
-  voices: SpeechSynthesisVoiceMap | null;
-  selectedVoice: SpeechSynthesisVoice | null;
-  setSelectedVoice: (selectedVoice: SpeechSynthesisVoice) => void;
   volume: number | number[]; // between 0 (lowest) and 1 (highest)
   setVolume: (volume: number) => void;
   pitch: number | number[]; // range between 0 (lowest) and 2 (highest)

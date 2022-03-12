@@ -33,6 +33,11 @@ export type SpeechToTextState = {
   interimResults: boolean;
 };
 
+export type SpeechToTextReducerAction =
+  | StringPayloadAction
+  | NoPayloadAction
+  | BooleanPayloadAction;
+
 export type NoPayloadAction = {
   type: SpeechToTextActions.CLEAR_TRANSCRIPT;
 };
@@ -50,10 +55,6 @@ export type StringPayloadAction = {
   payload: string;
 };
 
-export type SpeechToTextReducerAction =
-  | StringPayloadAction
-  | NoPayloadAction
-  | BooleanPayloadAction;
 
 export enum SpeechToTextActions {
   SET_TRANSCRIPT,
