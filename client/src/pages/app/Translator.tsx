@@ -1,25 +1,22 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { UserProfile } from "../../store/userSlice";
-import useSpeechToText from "../../hooks/useSpeechToText";
-import useTextToSpeech from "../../hooks/useTextToSpeech";
-import { Main, Options, Record } from ".";
-import { Box, Fab, Typography } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
-
-import Nav from "../../components/Nav";
 import { useAppDispatch } from "../../store/hooks";
 import { logout } from "../../store/userSlice/thunks";
+import useSpeechToText from "../../hooks/useSpeechToText";
+import useTextToSpeech from "../../hooks/useTextToSpeech";
+import useMuiLangLists from "../../hooks/userMuiLangLists";
+
+import { Main, Options, Record } from ".";
+import { Box, Fab, Typography } from "@mui/material";
+
+import Nav from "../../components/Nav";
+import LogoutIcon from "@mui/icons-material/Logout";
 
 export enum Page {
   HISTORY,
   MAIN,
   OPTIONS,
 }
-
-export type MuiLists = {
-  srcCodeList: string[];
-  trgCodeList: { type: string; content: string; lang: string }[];
-};
 
 const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
   const userDispatch = useAppDispatch();
@@ -37,38 +34,7 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
     options: speakOptions,
   } = useTextToSpeech();
 
-  const srcCodeList = useMemo<string[]>(() => {
-    const voices = speaker.getVoiceArray();
-
-    let result: string[] = [];
-    if (voices.length) {
-      const langCodes = voices.map((voice) => voice.lang);
-      result = [...new Set(langCodes)];
-    }
-    return result;
-  }, [speaker]);
-
-  const trgCodeList = useMemo<MuiLists["trgCodeList"]>(() => {
-    const voiceArr = speaker.getVoiceArray();
-
-    let result: MuiLists["trgCodeList"] = [];
-    if (voiceArr.length) {
-      const voiceMap = speaker.getVoiceMap();
-      const langList = Object.keys(voiceMap);
-
-      for (let i = 0; i < langList.length; i++) {
-        const langCode = langList[i];
-        const langVoices = voiceMap[langCode];
-        result.push({ type: "subheader", content: langCode, lang: langCode });
-
-        for (let j = 0; j < langVoices.length; j++) {
-          const voice = langVoices[j];
-          result.push({ type: "item", content: voice.name, lang: voice.lang });
-        }
-      }
-    }
-    return result;
-  }, [speaker]);
+  const [srcCodeList, trgCodeList] = useMuiLangLists(speaker);
 
   if (!speechToTextAvailable || !textToSpeechAvailable) {
     return (
@@ -119,8 +85,8 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
         <Main
           microphone={microphone}
           speaker={speaker}
-          src={srcCodeList}
-          trg={trgCodeList}
+          srcCodeList={srcCodeList}
+          trgCodeList={trgCodeList}
         />
       )}
       {page === Page.OPTIONS && (
@@ -132,37 +98,3 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
 };
 
 export default Translator;
-
-{
-  /* <FormControl fullWidth>
-  <InputLabel id="tgt-lang">Target Language</InputLabel>
-  <Select
-    label="Target Language"
-    id="tgt-lang"
-    name="target"
-    value={voicesReady ? ttsOpts.voice : ""}
-    onChange={handleSetTargetLang}
-  >
-    <MenuItem value="">
-      <em>Select a language and voice!</em>
-    </MenuItem>
-
-    {voicesReady &&
-      muiLists.trgCodeList.map((data) => {
-        if (data.type === "subheader")
-          return <ListSubheader key={data.content}>{data.lang}</ListSubheader>;
-        if (data.type === "item")
-          return (
-            <MenuItem key={data.content} value={`${data.lang} ${data.content}`}>
-              {data.content}
-            </MenuItem>
-          );
-        return (
-          <MenuItem value="">
-            <em></em>
-          </MenuItem>
-        );
-      })}
-  </Select>
-</FormControl>; */
-}
