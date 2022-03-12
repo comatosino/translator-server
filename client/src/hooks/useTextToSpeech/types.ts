@@ -2,7 +2,6 @@ import TextToSpeech from "./TextToSpeech";
 
 export type TextToSpeechState = {
   textToSpeech: TextToSpeech;
-  speaking: boolean;
   selectedVoice: SpeechSynthesisVoice | null;
   voices: SpeechSynthesisVoiceMap | null;
   volume: number | number[];
@@ -11,10 +10,9 @@ export type TextToSpeechState = {
 };
 
 export type Speaker = {
-  speaking: boolean;
   selectedVoice: SpeechSynthesisVoice | null;
-  setSelectedVoice: (voice: SpeechSynthesisVoice) => SpeechSynthesisVoice;
-  getVoiceMap: () => SpeechSynthesisVoiceMap;
+  setSelectedVoice: (voice: SpeechSynthesisVoice) => void;
+  getVoiceMap: () => SpeechSynthesisVoiceMap | undefined;
   getVoiceArray: () => SpeechSynthesisVoice[];
   speak: (text: string, options: TextToSpeechOptions) => void;
   pause: () => void;
