@@ -23,29 +23,32 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
     }
   }, [textToSpeechAvailable, textToSpeech.voices]);
 
-  const speaker: Speaker = {
-    speaking: state.speaking,
-    speak(text: string, options: TextToSpeechOptions) {
-      textToSpeech.speak(text, options);
-    },
-    pause() {
-      textToSpeech.pause();
-    },
-    resume() {
-      textToSpeech.resume();
-    },
-    cancel() {
-      textToSpeech.cancel();
-    },
-  };
-
-  const options = useMemo((): TextToSpeechOptions => {
+  const speaker = useMemo((): Speaker => {
     return {
-      voices: state.voices,
+      speaking: state.speaking,
       selectedVoice: state.selectedVoice,
+      getVoiceMap: () => textToSpeech.getVoiceMap(),
+      getVoiceArray: () => textToSpeech.getVoiceArray(),
       setSelectedVoice: (selectedVoice: SpeechSynthesisVoice) => {
         dispatch(setSelectedVoice(selectedVoice));
       },
+      speak(text: string, options: TextToSpeechOptions) {
+        textToSpeech.speak(text, options);
+      },
+      pause() {
+        textToSpeech.pause();
+      },
+      resume() {
+        textToSpeech.resume();
+      },
+      cancel() {
+        textToSpeech.cancel();
+      },
+    };
+  }, [state, textToSpeech]);
+
+  const options = useMemo((): TextToSpeechOptions => {
+    return {
       volume: state.volume,
       setVolume: (volume: number) => {
         dispatch(setVolume(volume));
