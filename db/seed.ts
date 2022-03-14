@@ -3,16 +3,17 @@ import { User, Translation } from "./models";
 
 const addData = async () => {
   try {
-    const testUser = await User.create({
+    await User.create({
       username: "Rob",
       password: "passweird",
-      translations: [],
-    });
-    const testTranslation = await Translation.create({
-      srcLang: "en-US",
-      srcText: "hello",
-      trgLang: "es-US",
-      trgText: "hola",
+      translations: [
+        await Translation.create({
+          srcLang: "en-US",
+          srcText: "hello",
+          trgLang: "es-US",
+          trgText: "hola",
+        }),
+      ],
     });
   } catch (error) {
     console.error("ERROR SEEDING");
