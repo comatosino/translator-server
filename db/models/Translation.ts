@@ -1,6 +1,13 @@
 import mongoose, { Schema } from "mongoose";
 
-const TranslationSchema = new Schema({
+interface Translation {
+  srcLang: string;
+  srcText: string;
+  trgLang: string;
+  trgText: string;
+}
+
+const TranslationSchema = new Schema<Translation>({
   srcLang: {
     type: String,
   },
