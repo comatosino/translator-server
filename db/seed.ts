@@ -4,8 +4,8 @@ import { User, Translation } from "./models";
 const addData = async () => {
   try {
     await User.create({
-      username: "Rob",
-      password: "passweird",
+      username: "demo",
+      password: "password",
       translations: [
         await Translation.create({
           srcLang: "en-US",
@@ -16,7 +16,6 @@ const addData = async () => {
       ],
     });
   } catch (error) {
-    console.error("ERROR SEEDING");
     console.error(error);
   }
 };
