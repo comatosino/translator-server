@@ -10,17 +10,17 @@ const SECRET_KEY = process.env.SECRET_KEY!;
 
 export const getUser: RequestHandler = async (req, res) => {
   try {
-    if (!req.userID) return res.status(401).json({ error: "NOT AUTHORIZED" });
+    if (!req.userID) return res.status(401).json({ error: "Please login" });
 
     const db = await readDB();
     const user = db.find((user) => user.id === req.userID);
 
-    if (!user) throw new Error("USER NOT FOUND");
+    if (!user) throw new Error("User not found");
 
     res.status(200).json({ profile: { username: user.username } });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "ERROR FETCHING USER PROFILE" });
+    res.status(500).json({ error: "Error fetching user profile" });
   }
 };
 
