@@ -1,6 +1,12 @@
-import mongoose, { Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 
-const UserSchema = new Schema({
+interface User {
+  username: string;
+  password: string;
+  translations: Types.ObjectId[];
+}
+
+const userSchema = new Schema<User>({
   username: {
     type: String,
     trim: true,
@@ -17,10 +23,5 @@ const UserSchema = new Schema({
   ],
 });
 
-UserSchema.pre("save", () => {
-  console.log("USER CREATED!");
-  console.log("TODO: HASH PW HERE!");
-});
-
-const User = mongoose.model("User", UserSchema);
+const User = model<User>("User", userSchema);
 export default User;
