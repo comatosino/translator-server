@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import { model, Schema } from "mongoose";
 
 interface Translation {
   srcLang: string;
@@ -10,17 +10,21 @@ interface Translation {
 const TranslationSchema = new Schema<Translation>({
   srcLang: {
     type: String,
+    required: true,
   },
   srcText: {
     type: String,
+    required: true,
   },
   trgLang: {
     type: String,
+    required: true,
   },
   trgText: {
     type: String,
+    required: true,
   },
 });
 
-const Translation = mongoose.model("Translation", TranslationSchema);
+const Translation = model("Translation", TranslationSchema);
 export default Translation;
