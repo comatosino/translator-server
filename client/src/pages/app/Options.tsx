@@ -1,8 +1,14 @@
 import {
   Box,
   Divider,
+  FormControl,
   FormControlLabel,
   FormGroup,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Slider,
   Stack,
   Switch,
@@ -10,98 +16,129 @@ import {
 } from "@mui/material";
 import { SpeechToTextOptions } from "../../hooks/useSpeechToText/types";
 import {
+  setPitch,
+  setRate,
+  setSelectedVoice,
+  setVolume,
+} from "../../hooks/useTextToSpeech/store/actions";
+import {
   TextToSpeechOptions,
   TextToSpeechActions,
+  SpeechSynthesisVoiceMap,
 } from "../../hooks/useTextToSpeech/types";
 
 const Options: React.FC<{
   micOptions: SpeechToTextOptions;
   speakOptions: TextToSpeechOptions;
-}> = ({ micOptions, speakOptions }): JSX.Element => {
+  getVoices: () => SpeechSynthesisVoiceMap | undefined;
+}> = ({ micOptions, speakOptions, getVoices }): JSX.Element => {
+  const altVoices = getVoices()![speakOptions.language];
+
+  const handleSetVoice = (e: SelectChangeEvent<string>) => {
+    const voice = altVoices.find((voice) => voice.name === e.target.value);
+    if (voice) speakOptions.dispatch(setSelectedVoice(voice));
+  };
+
   return (
-    <Box
-      sx={{
-        height: 1,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Stack>
-        <Typography component="h2">
-          <Divider>Source Language Options</Divider>
-        </Typography>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={micOptions.continuous}
-                onChange={() =>
-                  micOptions.setContinuous(!micOptions.continuous)
-                }
-              />
-            }
-            label="Continuous Listening?"
-          />
-          <FormControlLabel
-            control={
-              <Switch
-                checked={micOptions.interimResults}
-                onChange={() =>
-                  micOptions.setInterimResults(!micOptions.interimResults)
-                }
-              />
-            }
-            label="Interim Results?"
-          />
-        </FormGroup>
+    <Stack spacing={2}>
+      <Typography component="h2">
+        <Divider>Source Language Options</Divider>
+      </Typography>
 
-        <Typography component="h2">
-          <Divider>Target Language Options</Divider>
-        </Typography>
+      <FormControl>
+        <InputLabel>{`${speakOptions.language} available alternate voices`}</InputLabel>
+        <Select
+          labelId="alt-voice-select-label"
+          id="alt-voice-select"
+          value={speakOptions.selectedVoice?.name || ""}
+          label={`${speakOptions.language}available alternate voices`}
+          onChange={handleSetVoice}
+        >
+          {altVoices.map((voice) => {
+            return (
+              <MenuItem key={voice.name} value={voice.name}>
+                {voice.name}
+              </MenuItem>
+            );
+          })}
+        </Select>
+        <FormHelperText>With label + helper text</FormHelperText>
+      </FormControl>
 
-        <Typography id="volume-slider">Volume</Typography>
-        <Slider
-          name={TextToSpeechActions[TextToSpeechActions.SET_VOLUME]}
-          aria-labelledby="volume-slider"
-          value={speakOptions.volume}
-          getAriaValueText={() => `${speakOptions.volume}`}
-          valueLabelDisplay="auto"
-          step={0.25}
-          marks
-          min={0}
-          max={1}
-          onChange={(e, value) => speakOptions.setVolume(value as number)}
+      <FormGroup>
+        <FormControlLabel
+          control={
+            <Switch
+              checked={micOptions.continuous}
+              onChange={() => micOptions.setContinuous(!micOptions.continuous)}
+            />
+          }
+          label="Continuous Listening?"
         />
-        <Typography id="pitch-slider">Pitch</Typography>
-        <Slider
-          name={TextToSpeechActions[TextToSpeechActions.SET_PITCH]}
-          aria-labelledby="pitch-slider"
-          value={speakOptions.pitch}
-          getAriaValueText={() => `${speakOptions.pitch}`}
-          valueLabelDisplay="auto"
-          step={0.25}
-          marks
-          min={0}
-          max={2}
-          onChange={(e, value) => speakOptions.setPitch(value as number)}
+        <FormControlLabel
+          control={
+            <Switch
+              checked={micOptions.interimResults}
+              onChange={() =>
+                micOptions.setInterimResults(!micOptions.interimResults)
+              }
+            />
+          }
+          label="Interim Results?"
         />
+      </FormGroup>
 
-        <Typography id="rate-slider">Rate</Typography>
-        <Slider
-          name={TextToSpeechActions[TextToSpeechActions.SET_RATE]}
-          aria-labelledby="rate-slider"
-          value={speakOptions.rate}
-          getAriaValueText={() => `${speakOptions.rate}`}
-          valueLabelDisplay="auto"
-          step={0.1}
-          marks
-          min={0.1}
-          max={10}
-          onChange={(e, value) => speakOptions.setRate(value as number)}
-        />
-      </Stack>
-    </Box>
+      <Typography component="h2">
+        <Divider>Target Language Options</Divider>
+      </Typography>
+
+      <Typography id="volume-slider">Volume</Typography>
+      <Slider
+        name={TextToSpeechActions[TextToSpeechActions.SET_VOLUME]}
+        aria-labelledby="volume-slider"
+        value={speakOptions.volume}
+        getAriaValueText={() => `${speakOptions.volume}`}
+        valueLabelDisplay="auto"
+        step={0.25}
+        marks
+        min={0}
+        max={1}
+        onChange={(e, value) =>
+          speakOptions.dispatch(setVolume(value as number))
+        }
+      />
+      <Typography id="pitch-slider">Pitch</Typography>
+      <Slider
+        name={TextToSpeechActions[TextToSpeechActions.SET_PITCH]}
+        aria-labelledby="pitch-slider"
+        value={speakOptions.pitch}
+        getAriaValueText={() => `${speakOptions.pitch}`}
+        valueLabelDisplay="auto"
+        step={0.25}
+        marks
+        min={0}
+        max={2}
+        onChange={(e, value) =>
+          speakOptions.dispatch(setPitch(value as number))
+        }
+      />
+
+      <Typography id="rate-slider">Rate</Typography>
+      <Slider
+        name={TextToSpeechActions[TextToSpeechActions.SET_RATE]}
+        aria-labelledby="rate-slider"
+        value={speakOptions.rate}
+        getAriaValueText={() => `${speakOptions.rate}`}
+        valueLabelDisplay="auto"
+        step={0.1}
+        marks
+        min={0.1}
+        max={10}
+        onChange={(_e, value) =>
+          speakOptions.dispatch(setRate(value as number))
+        }
+      />
+    </Stack>
   );
 };
 
