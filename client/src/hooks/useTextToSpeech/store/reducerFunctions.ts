@@ -22,6 +22,13 @@ export const __setVoices: Reducer<
   return { ...state, voices: payload };
 };
 
+export const __setLanguage: Reducer<TextToSpeechState, string> = (
+  state,
+  payload
+): TextToSpeechState => {
+  return { ...state, language: payload };
+};
+
 export const __setVolume: Reducer<TextToSpeechState, number> = (
   state,
   payload

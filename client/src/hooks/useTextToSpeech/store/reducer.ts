@@ -11,6 +11,7 @@ import {
   __setRate,
   __setPitch,
   __setSpeaking,
+  __setLanguage,
 } from "./reducerFunctions";
 
 const textToSpeechReducer: Reducer<
@@ -23,6 +24,9 @@ const textToSpeechReducer: Reducer<
 
     case TextToSpeechActions.SET_SELECTED_VOICE:
       return __setSelectedVoice(state, action.payload);
+
+    case TextToSpeechActions.SET_LANGUAGE:
+      return __setLanguage(state, action.payload);
 
     case TextToSpeechActions.SET_VOLUME:
       return __setVolume(state, action.payload);
