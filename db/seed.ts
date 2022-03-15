@@ -21,9 +21,12 @@ const addData = async () => {
 };
 
 const seed = async () => {
-  await db.connect();
-  await addData();
-  await db.disconnect();
+  const connection = await db.connect();
+  if (connection) {
+    await connection?.dropDatabase();
+    await addData();
+    await db.disconnect();
+  }
 };
 
 seed();
