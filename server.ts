@@ -1,4 +1,5 @@
 import "dotenv/config";
+import db from "./db";
 import express from "express";
 import path from "path";
 import routes from "./routes";
@@ -6,6 +7,8 @@ import { authenticate } from "./middleware";
 
 const PORT = process.env.PORT || 5000;
 const app = express();
+
+db.connect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
