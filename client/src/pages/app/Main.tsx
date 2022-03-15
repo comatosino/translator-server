@@ -35,6 +35,10 @@ const Main: React.FC<{
     }
   };
 
+  const handleListenAndTranslate = () => {
+    microphone.listen();
+  }
+
   return (
     <Box
       sx={{
@@ -125,11 +129,17 @@ const Main: React.FC<{
               );
             })}
           </Select>
-          <FormHelperText>{speaker.language}</FormHelperText>
+
+          {speaker.language === "es-US" ? (
+            <FormHelperText>{"es-MX"}</FormHelperText>
+          ) : (
+            <FormHelperText>{speaker.language}</FormHelperText>
+          )}
         </FormControl>
       </Stack>
 
       <IconButton
+        onClick={handleListenAndTranslate}
         sx={{
           position: "fixed",
           bottom: 100,
