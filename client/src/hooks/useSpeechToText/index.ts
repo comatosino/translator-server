@@ -54,16 +54,19 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
     state.speechToText.interface.onnomatch = (
       _e: SpeechRecognitionEvent
     ): void => {
-      throw new Error("NO MATCH");
+      console.log("NO SPEECH-TO-TEXT MATCH");
+      state.speechToText.clearTranscript();
+      dispatch(clearTranscript());
+      dispatch(setListening(false));
     };
 
     state.speechToText.interface.onerror = (
       e: SpeechRecognitionError
     ): void => {
+      console.log("ERROR", e.message, e.error);
       state.speechToText.clearTranscript();
       dispatch(clearTranscript());
       dispatch(setListening(false));
-      throw new Error(e.error);
     };
   });
 
@@ -77,7 +80,11 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
         dispatch(setLanguage(lang));
       },
       async listen() {
-        state.speechToText.start();
+        try {
+          state.speechToText.start();
+        } catch (error) {
+          console.error(error);
+        }
       },
       stop() {
         state.speechToText.stop();
@@ -89,23 +96,28 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
         state.speechToText.clearTranscript();
       },
     };
-  }, [state.listening, state.transcript, state.language]);
+  }, [state.listening, state.transcript, state.language, state.speechToText]);
 
   const options = useMemo((): SpeechToTextOptions => {
     return {
       language: state.language,
-      continuous: state.speechToText.continuous,
+      continuous: state.continuous,
       setContinuous: (continuous: boolean) => {
         state.speechToText.continuous = continuous;
         dispatch(setContinuous(continuous));
       },
-      interimResults: state.speechToText.interimResults,
+      interimResults: state.interimResults,
       setInterimResults: (interimResults: boolean) => {
         state.speechToText.interimResults = interimResults;
         dispatch(setInterimResults(interimResults));
       },
     };
-  }, [state.continuous, state.interimResults]);
+  }, [
+    state.language,
+    state.continuous,
+    state.interimResults,
+    state.speechToText,
+  ]);
 
   return {
     speechToTextAvailable,
