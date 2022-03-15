@@ -40,7 +40,7 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
     return (
       <Box
         sx={{
-          height: 1,
+          height: '100vh',
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",
@@ -61,7 +61,6 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
     <Container maxWidth="sm">
       <Box
         sx={{
-          height: 1,
           display: "flex",
           flexDirection: "column",
           justifyContent: "center",

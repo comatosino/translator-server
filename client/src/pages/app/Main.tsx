@@ -38,6 +38,7 @@ const Main: React.FC<{
   return (
     <Box
       sx={{
+        height: 1,
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
