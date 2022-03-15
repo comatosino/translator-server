@@ -1,26 +1,26 @@
 import { model, Schema } from "mongoose";
 
 interface Translation {
-  srcLang: string;
-  srcText: string;
-  trgLang: string;
-  trgText: string;
+  source: string;
+  sourceText: string;
+  target: string;
+  targetText: string;
 }
 
 const TranslationSchema = new Schema<Translation>({
-  srcLang: {
+  source: {
     type: String,
     required: true,
   },
-  srcText: {
+  sourceText: {
     type: String,
     required: true,
   },
-  trgLang: {
+  target: {
     type: String,
     required: true,
   },
-  trgText: {
+  targetText: {
     type: String,
     required: true,
   },
