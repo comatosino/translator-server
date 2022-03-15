@@ -1,22 +1,29 @@
-import mongoose from "mongoose";
+import mongoose, { Connection } from "mongoose";
 
 const uri = process.env.MONGODB_URI || "mongodb://localhost/translatordb";
 
 const db = {
-  connect: async function () {
+  connect: async function (): Promise<Connection | void> {
     try {
-      await mongoose.connect(uri);
-      console.log(`db connected on ${uri}`);
+      const instance = await mongoose.connect(uri);
+      if (instance) {
+        console.log(`db connected on ${uri}`);
+      }
+      return instance.connection;
     } catch (error) {
       console.error(error);
-      this.disconnect();
+      return this.disconnect();
     }
   },
+
+  // closes all connections
   disconnect: async function () {
     try {
-      await mongoose.disconnect();
+      return await mongoose.disconnect();
     } catch (error) {
       console.error(error);
+    } finally {
+      console.log(`all db connections disconnected`);
     }
   },
 };
