@@ -26,12 +26,12 @@ export type TranslationReqPayload = {
   text: string;
 };
 
-export type AppTranslationResponse = {
+export type Translation = {
   source: string;
   sourceText: string;
   target: string;
   targetText: string;
-};
+}
 
 export type AppApiGetUserResponse = {
   profile: UserProfile;
@@ -65,6 +65,6 @@ export default class API {
 
   static translate = async (payload: TranslationReqPayload) => {
     const url = `api/translate`;
-    return axios.post<AppTranslationResponse>(url, payload);
+    return axios.post<Translation>(url, payload);
   };
 }

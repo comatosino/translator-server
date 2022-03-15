@@ -1,7 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { Translation } from "../../utils/API";
 
 export interface UserProfile {
   username?: string;
+  translations: Translation[];
 }
 
 export interface UserState {
