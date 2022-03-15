@@ -27,6 +27,7 @@ export type Microphone = {
 };
 
 export type SpeechToTextOptions = {
+  language: string;
   continuous: boolean;
   setContinuous: (continuous: boolean) => void;
   interimResults: boolean;
