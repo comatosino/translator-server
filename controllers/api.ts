@@ -1,5 +1,6 @@
 import { RequestHandler } from "express";
 import axios, { AxiosRequestConfig } from "axios";
+import { Translation, User } from "../db/models";
 
 // List of languages supprted by V2 REST Google Translate API (key required)
 // https://translation.googleapis.com/language/translate/v2/languages
@@ -43,12 +44,20 @@ export const translate: RequestHandler = async (req, res) => {
       } = response.data;
       const [result] = translations;
 
-      return res.status(200).json({
+      const modelData = {
         source: srcLang,
         sourceText: text,
         target: trgLang,
         targetText: result.translatedText,
+      };
+
+      const newTranslation = await Translation.create(modelData);
+
+      await User.findByIdAndUpdate(req.userID, {
+        $push: { translations: newTranslation._id },
       });
+
+      return res.status(200).json(modelData);
     }
     res.status(400).json({ error: "languages are the same" });
   } catch (error) {
