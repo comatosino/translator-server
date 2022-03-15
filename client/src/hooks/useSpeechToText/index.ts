@@ -19,85 +19,92 @@ import {
 const useSpeechToText = (): UseSpeechToTextReturn => {
   const speechToTextAvailable = SpeechToText.isSupported();
   const [state, dispatch] = useReducer(speechToTextReducer, INITIAL_STATE);
-  const { speechToText } = state;
 
   useEffect(() => {
     if (speechToTextAvailable) {
-      speechToText.interface.onstart = (_e: Event) => {
-        speechToText.clearTranscript();
+      state.speechToText.interface.onstart = (_e: Event) => {
+        state.speechToText.clearTranscript();
         dispatch(clearTranscript());
-        speechToText.listening = true;
+        state.speechToText.listening = true;
         dispatch(setListening(true));
       };
     }
 
-    speechToText.interface.onresult = (e: SpeechRecognitionEvent): void => {
+    state.speechToText.interface.onresult = (
+      e: SpeechRecognitionEvent
+    ): void => {
       try {
         const { transcript } = e.results[0][0];
-        speechToText.transcript = transcript;
+        state.speechToText.transcript = transcript;
         dispatch(setTranscript(transcript));
       } catch (error) {
         console.error(error);
       }
     };
 
-    speechToText.interface.onend = (_e: Event) => {
+    state.speechToText.interface.onend = (_e: Event) => {
       try {
-        speechToText.listening = false;
+        state.speechToText.listening = false;
         dispatch(setListening(false));
       } catch (error) {
         console.error(error);
       }
     };
 
-    speechToText.interface.onnomatch = (_e: SpeechRecognitionEvent): void => {
+    state.speechToText.interface.onnomatch = (
+      _e: SpeechRecognitionEvent
+    ): void => {
       throw new Error("NO MATCH");
     };
 
-    speechToText.interface.onerror = (e: SpeechRecognitionError): void => {
-      speechToText.clearTranscript();
+    state.speechToText.interface.onerror = (
+      e: SpeechRecognitionError
+    ): void => {
+      state.speechToText.clearTranscript();
       dispatch(clearTranscript());
       dispatch(setListening(false));
       throw new Error(e.error);
     };
-  }, [speechToTextAvailable, speechToText]);
+  });
 
-  const microphone: Microphone = {
-    listening: state.listening,
-    transcript: state.transcript,
-    language: state.language,
-    setLanguage: (lang: string): void => {
-      state.speechToText.lang = lang;
-      dispatch(setLang(lang));
-    },
-    async listen() {
-      speechToText.start();
-    },
-    stop() {
-      speechToText.stop();
-    },
-    abort() {
-      speechToText.abort();
-    },
-    clear() {
-      speechToText.clearTranscript();
-    },
-  };
+  const microphone: Microphone = useMemo(() => {
+    return {
+      listening: state.listening,
+      transcript: state.transcript,
+      language: state.language,
+      setLanguage: (lang: string): void => {
+        state.speechToText.lang = lang;
+        dispatch(setLang(lang));
+      },
+      async listen() {
+        state.speechToText.start();
+      },
+      stop() {
+        state.speechToText.stop();
+      },
+      abort() {
+        state.speechToText.abort();
+      },
+      clear() {
+        state.speechToText.clearTranscript();
+      },
+    };
+  }, [state.listening, state.transcript, state.language]);
 
   const options = useMemo((): SpeechToTextOptions => {
     return {
-      continuous: state.continuous,
+      continuous: state.speechToText.continuous,
       setContinuous: (continuous: boolean) => {
         state.speechToText.continuous = continuous;
         dispatch(setContinuous(continuous));
       },
-      interimResults: state.interimResults,
+      interimResults: state.speechToText.interimResults,
       setInterimResults: (interimResults: boolean) => {
         state.speechToText.interimResults = interimResults;
         dispatch(setInterimResults(interimResults));
       },
     };
-  }, [state]);
+  }, [state.continuous, state.interimResults]);
 
   return {
     speechToTextAvailable,

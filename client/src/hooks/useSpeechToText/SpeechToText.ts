@@ -7,6 +7,7 @@ export default class SpeechToText {
   private constructor() {
     const Recognition = webkitSpeechRecognition || SpeechRecognition;
     this.interface = new Recognition();
+    this.interface.lang = navigator.language;
   }
 
   static isSupported(): boolean {
