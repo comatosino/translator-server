@@ -12,6 +12,7 @@
 /build
 
 # misc
+v2SupportedLangs.json
 .DS_Store
 .env
 .env.local

@@ -1,6 +1,11 @@
+import { useEffect } from "react";
+import API, { TranslationReqPayload } from "../../utils/API";
+import {
+  setLanguage,
+  setSelectedVoice,
+} from "../../hooks/useTextToSpeech/store/actions";
 import { Microphone } from "../../hooks/useSpeechToText/types";
 import { Speaker } from "../../hooks/useTextToSpeech/types";
-import API, { TranslationReqPayload } from "../../utils/API";
 import {
   Box,
   FormControl,
@@ -13,11 +18,6 @@ import {
   FormHelperText,
 } from "@mui/material";
 import MicNoneIcon from "@mui/icons-material/MicNone";
-import {
-  setLanguage,
-  setSelectedVoice,
-} from "../../hooks/useTextToSpeech/store/actions";
-import { useEffect } from "react";
 
 const Main: React.FC<{
   microphone: Microphone;
@@ -28,19 +28,22 @@ const Main: React.FC<{
   const { language: trgLang } = speaker;
 
   useEffect(() => {
-    if (transcript) {
-      const payload = {
-        srcLang,
-        text: transcript,
-        trgLang,
-      };
-      translate(payload);
-    }
+    if (transcript) translate(transcript);
   }, [transcript]);
 
-  const translate = async (payload: TranslationReqPayload) => {
+  const translate = async (transcript: string) => {
+    const payload: TranslationReqPayload = {
+      srcLang,
+      text: transcript,
+      trgLang,
+    };
     const response = await API.translate(payload);
-    console.log(response);
+    const { source, sourceText, target, targetText } = response.data;
+
+    console.log("source: ", source);
+    console.log("sourceText: ", sourceText);
+    console.log("target: ", target);
+    console.log("targetText: ", targetText);
   };
 
   const handleSetSourceLang = (e: SelectChangeEvent<string>) => {
