@@ -45,6 +45,7 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
     state.speechToText.interface.onend = (_e: Event) => {
       try {
         state.speechToText.listening = false;
+        dispatch(clearTranscript());
         dispatch(setListening(false));
       } catch (error) {
         console.error(error);
