@@ -1,5 +1,6 @@
 import { Microphone } from "../../hooks/useSpeechToText/types";
 import { Speaker } from "../../hooks/useTextToSpeech/types";
+import API, { TranslationReqPayload } from "../../utils/API";
 import {
   Box,
   FormControl,
@@ -16,12 +17,32 @@ import {
   setLanguage,
   setSelectedVoice,
 } from "../../hooks/useTextToSpeech/store/actions";
+import { useEffect } from "react";
 
 const Main: React.FC<{
   microphone: Microphone;
   speaker: Speaker;
   langCodes: string[];
 }> = ({ microphone, speaker, langCodes }): JSX.Element => {
+  const { language: srcLang, transcript } = microphone;
+  const { language: trgLang } = speaker;
+
+  useEffect(() => {
+    if (transcript) {
+      const payload = {
+        srcLang,
+        text: transcript,
+        trgLang,
+      };
+      translate(payload);
+    }
+  }, [transcript]);
+
+  const translate = async (payload: TranslationReqPayload) => {
+    const response = await API.translate(payload);
+    console.log(response);
+  };
+
   const handleSetSourceLang = (e: SelectChangeEvent<string>) => {
     microphone.setLanguage(e.target.value);
   };
@@ -35,9 +56,9 @@ const Main: React.FC<{
     }
   };
 
-  const handleListenAndTranslate = () => {
+  const handleListen = () => {
     microphone.listen();
-  }
+  };
 
   return (
     <Box
@@ -139,7 +160,7 @@ const Main: React.FC<{
       </Stack>
 
       <IconButton
-        onClick={handleListenAndTranslate}
+        onClick={handleListen}
         sx={{
           position: "fixed",
           bottom: 100,
