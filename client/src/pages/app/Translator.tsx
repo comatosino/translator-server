@@ -7,7 +7,7 @@ import useTextToSpeech from "../../hooks/useTextToSpeech";
 import useMuiLangLists from "../../hooks/userMuiLangLists";
 
 import { Main, Options, Record } from ".";
-import { Box, Fab, Typography } from "@mui/material";
+import { Box, Container, Fab, Typography } from "@mui/material";
 
 import Nav from "../../components/Nav";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -34,7 +34,7 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
     options: speakOptions,
   } = useTextToSpeech();
 
-  const [srcCodeList, trgCodeList] = useMuiLangLists(speaker);
+  const [langCodes] = useMuiLangLists(speaker);
 
   if (!speechToTextAvailable || !textToSpeechAvailable) {
     return (
@@ -58,42 +58,47 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
   }
 
   return (
-    <Box
-      sx={{
-        height: 1,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Fab
-        onClick={() => userDispatch(logout())}
+    <Container maxWidth="sm">
+      <Box
         sx={{
-          position: "fixed",
-          top: 20,
-          right: 20,
+          height: 1,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
         }}
-        color="primary"
-        aria-label="add"
       >
-        <LogoutIcon />
-      </Fab>
+        <Fab
+          onClick={() => userDispatch(logout())}
+          sx={{
+            position: "fixed",
+            top: 20,
+            right: 20,
+          }}
+          color="primary"
+          aria-label="add"
+        >
+          <LogoutIcon />
+        </Fab>
 
-      <Nav page={page} setPage={setPage} />
-      {page === Page.MAIN && (
-        <Main
-          microphone={microphone}
-          speaker={speaker}
-          srcCodeList={srcCodeList}
-          trgCodeList={trgCodeList}
-        />
-      )}
-      {page === Page.OPTIONS && (
-        <Options micOptions={micOptions} speakOptions={speakOptions} />
-      )}
-      {page === Page.HISTORY && <Record />}
-    </Box>
+        <Nav page={page} setPage={setPage} />
+        {page === Page.MAIN && (
+          <Main
+            speaker={speaker}
+            microphone={microphone}
+            langCodes={langCodes}
+          />
+        )}
+        {page === Page.OPTIONS && (
+          <Options
+            micOptions={micOptions}
+            speakOptions={speakOptions}
+            getVoices={speaker.getVoiceMap}
+          />
+        )}
+        {page === Page.HISTORY && <Record />}
+      </Box>
+    </Container>
   );
 };
 
