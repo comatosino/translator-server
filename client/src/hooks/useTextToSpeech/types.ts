@@ -2,6 +2,8 @@ import TextToSpeech from "./TextToSpeech";
 
 export type TextToSpeechState = {
   textToSpeech: TextToSpeech;
+  speaking: boolean;
+  language: string;
   selectedVoice: SpeechSynthesisVoice | null;
   voices: SpeechSynthesisVoiceMap | null;
   volume: number | number[];
@@ -10,14 +12,24 @@ export type TextToSpeechState = {
 };
 
 export type Speaker = {
-  selectedVoice: SpeechSynthesisVoice | null;
-  setSelectedVoice: (voice: SpeechSynthesisVoice) => void;
+  speaking: boolean;
+  language: string;
+  dispatch: React.Dispatch<TextToSpeechReducerAction>;
   getVoiceMap: () => SpeechSynthesisVoiceMap | undefined;
   getVoiceArray: () => SpeechSynthesisVoice[];
   speak: (text: string, options: TextToSpeechOptions) => void;
   pause: () => void;
   resume: () => void;
   cancel: () => void;
+};
+
+export type TextToSpeechOptions = {
+  dispatch: React.Dispatch<TextToSpeechReducerAction>;
+  selectedVoice: SpeechSynthesisVoice | null;
+  language: string;
+  volume: number | number[]; // between 0 (lowest) and 1 (highest)
+  pitch: number | number[]; // range between 0 (lowest) and 2 (highest)
+  rate: number | number[]; // between 0.1 (lowest) and 10 (highest)
 };
 
 export type SpeechSynthesisVoiceMap = {
@@ -30,15 +42,6 @@ export type UseTextToSpeechReturn = {
   options: TextToSpeechOptions;
 };
 
-export type TextToSpeechOptions = {
-  volume: number | number[]; // between 0 (lowest) and 1 (highest)
-  setVolume: (volume: number) => void;
-  pitch: number | number[]; // range between 0 (lowest) and 2 (highest)
-  setPitch: (pitch: number) => void;
-  rate: number | number[]; // between 0.1 (lowest) and 10 (highest)
-  setRate: (rate: number) => void;
-};
-
 export enum TextToSpeechActions {
   SET_VOICES,
   SET_SELECTED_VOICE,
@@ -46,11 +49,17 @@ export enum TextToSpeechActions {
   SET_RATE,
   SET_PITCH,
   SET_SPEAKING,
+  SET_LANGUAGE,
 }
 
 export type BooleanPayloadAction = {
   type: TextToSpeechActions.SET_SPEAKING;
   payload: boolean;
+};
+
+export type StringPayloadAction = {
+  type: TextToSpeechActions.SET_LANGUAGE;
+  payload: string;
 };
 
 export type NumberPayloadAction = {
@@ -72,6 +81,7 @@ export type VoicesPayloadAction = {
 };
 
 export type TextToSpeechReducerAction =
+  | StringPayloadAction
   | VoicesPayloadAction
   | SelectedVoicePayloadAction
   | NumberPayloadAction
