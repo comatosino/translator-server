@@ -20,6 +20,19 @@ export type Credentials = {
   password: string;
 };
 
+export type TranslationReqPayload = {
+  srcLang: string;
+  trgLang: string;
+  text: string;
+};
+
+export type AppTranslationResponse = {
+  srcLang: string;
+  srcText: string;
+  trgLang: string;
+  trgText: string;
+};
+
 export type AppApiGetUserResponse = {
   profile: UserProfile;
 };
@@ -48,5 +61,10 @@ export default class API {
   static logout = async () => {
     const url = `auth/logout`;
     return axios.delete(url);
+  };
+
+  static translate = async (payload: TranslationReqPayload) => {
+    const url = `api/translate`;
+    return axios.post<AppTranslationResponse>(url, payload)
   };
 }
