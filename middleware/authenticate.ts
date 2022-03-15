@@ -10,7 +10,7 @@ const authenticate: RequestHandler = (req, res, next) => {
   if (token) {
     jwt.verify(token, SECRET_KEY, (err, payload: any) => {
       if (err) {
-        res.send(403).json({ error: err.message });
+        res.status(403).json({ error: err.message });
       } else {
         req.userID = payload.userID; // TODO: add typing so payload accepts userID property
         next();
