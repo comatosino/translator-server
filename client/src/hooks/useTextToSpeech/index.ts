@@ -1,11 +1,5 @@
 import { useEffect, useMemo, useReducer } from "react";
-import {
-  setPitch,
-  setRate,
-  setSelectedVoice,
-  setVoices,
-  setVolume,
-} from "./store/actions";
+import { setSelectedVoice, setVoices, setLanguage } from "./store/actions";
 import INITIAL_STATE from "./store/init";
 import textToSpeechReducer from "./store/reducer";
 import TextToSpeech from "./TextToSpeech";
@@ -15,66 +9,58 @@ import { UseTextToSpeechReturn, TextToSpeechOptions, Speaker } from "./types";
 const useTextToSpeech = (): UseTextToSpeechReturn => {
   const textToSpeechAvailable = TextToSpeech.isSupported();
   const [state, dispatch] = useReducer(textToSpeechReducer, INITIAL_STATE);
-  const { textToSpeech } = state;
 
   useEffect(() => {
-    if (textToSpeechAvailable && textToSpeech.voices) {
-      dispatch(setVoices(textToSpeech.voices));
-    }
-  }, [textToSpeechAvailable, textToSpeech.voices]);
-
-  // set a default voice
-  useEffect(() => {
-    if (textToSpeechAvailable && textToSpeech.voices) {
-      const voices = textToSpeech.voices;
+    if (state.textToSpeech.voices) {
+      const voices = state.textToSpeech.voices;
       const localVoice = voices[navigator.language][0];
+      dispatch(setVoices(state.textToSpeech.voices));
       dispatch(setSelectedVoice(localVoice));
     }
-  }, [textToSpeechAvailable, textToSpeech.voices]);
+  }, [state.textToSpeech.voices]);
 
   const speaker = useMemo((): Speaker => {
     return {
-      selectedVoice: state.selectedVoice,
-      setSelectedVoice: (selectedVoice: SpeechSynthesisVoice) => {
-        dispatch(setSelectedVoice(selectedVoice!));
-      },
+      dispatch,
+      language: state.language,
+      speaking: state.speaking,
       getVoiceMap: () => {
-        return textToSpeech.getVoiceMap();
+        return state.textToSpeech.getVoiceMap();
       },
       getVoiceArray: () => {
-        return textToSpeech.getVoiceArray();
+        return state.textToSpeech.getVoiceArray();
       },
       speak(text: string, options: TextToSpeechOptions) {
-        textToSpeech.speak(text, options);
+        state.textToSpeech.speak(text, options);
       },
       pause() {
-        textToSpeech.pause();
+        state.textToSpeech.pause();
       },
       resume() {
-        textToSpeech.resume();
+        state.textToSpeech.resume();
       },
       cancel() {
-        textToSpeech.cancel();
+        state.textToSpeech.cancel();
       },
     };
-  }, [state.selectedVoice, textToSpeech]);
+  }, [state.language, state.speaking, state.textToSpeech]);
 
   const options = useMemo((): TextToSpeechOptions => {
     return {
+      dispatch,
+      language: state.language,
+      selectedVoice: state.selectedVoice,
       volume: state.volume,
-      setVolume: (volume: number) => {
-        dispatch(setVolume(volume));
-      },
       rate: state.rate,
-      setRate: (rate: number) => {
-        dispatch(setRate(rate));
-      },
       pitch: state.pitch,
-      setPitch: (pitch: number) => {
-        dispatch(setPitch(pitch));
-      },
     };
-  }, [state.pitch, state.rate, state.volume]);
+  }, [
+    state.language,
+    state.pitch,
+    state.rate,
+    state.selectedVoice,
+    state.volume,
+  ]);
 
   return { textToSpeechAvailable, speaker, options };
 };
