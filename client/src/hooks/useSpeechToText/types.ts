@@ -1,5 +1,20 @@
 import SpeechToText from "./SpeechToText";
 
+export type SpeechToTextState = {
+  speechToText: SpeechToText;
+  transcript: string;
+  language: string;
+  listening: boolean;
+  continuous: boolean;
+  interimResults: boolean;
+};
+
+export type UseSpeechToTextReturn = {
+  speechToTextAvailable: boolean;
+  microphone: Microphone;
+  options: SpeechToTextOptions;
+};
+
 export type Microphone = {
   listening: boolean;
   transcript: string;
@@ -11,12 +26,6 @@ export type Microphone = {
   clear: () => void;
 };
 
-export type UseSpeechToTextReturn = {
-  speechToTextAvailable: boolean;
-  microphone: Microphone;
-  options: SpeechToTextOptions;
-};
-
 export type SpeechToTextOptions = {
   continuous: boolean;
   setContinuous: (continuous: boolean) => void;
@@ -24,22 +33,27 @@ export type SpeechToTextOptions = {
   setInterimResults: (interimResults: boolean) => void;
 };
 
-export type SpeechToTextState = {
-  speechToText: SpeechToText;
-  transcript: string;
-  language: string;
-  listening: boolean;
-  continuous: boolean;
-  interimResults: boolean;
-};
+export enum SpeechToTextActions {
+  SET_TRANSCRIPT,
+  CLEAR_TRANSCRIPT,
+  SET_LANGUAGE,
+  SET_LISTENING,
+  SET_CONTINUOUS,
+  SET_INTERIM_RESULTS,
+}
 
 export type SpeechToTextReducerAction =
-  | StringPayloadAction
   | NoPayloadAction
+  | StringPayloadAction
   | BooleanPayloadAction;
 
 export type NoPayloadAction = {
   type: SpeechToTextActions.CLEAR_TRANSCRIPT;
+};
+
+export type StringPayloadAction = {
+  type: SpeechToTextActions.SET_TRANSCRIPT | SpeechToTextActions.SET_LANGUAGE;
+  payload: string;
 };
 
 export type BooleanPayloadAction = {
@@ -49,18 +63,3 @@ export type BooleanPayloadAction = {
     | SpeechToTextActions.SET_INTERIM_RESULTS;
   payload: boolean;
 };
-
-export type StringPayloadAction = {
-  type: SpeechToTextActions.SET_TRANSCRIPT | SpeechToTextActions.SET_LANG;
-  payload: string;
-};
-
-
-export enum SpeechToTextActions {
-  SET_TRANSCRIPT,
-  CLEAR_TRANSCRIPT,
-  SET_LANG,
-  SET_LISTENING,
-  SET_CONTINUOUS,
-  SET_INTERIM_RESULTS,
-}

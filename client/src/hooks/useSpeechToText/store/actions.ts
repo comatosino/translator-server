@@ -20,7 +20,7 @@ export const clearTranscript = (): NoPayloadAction => {
 
 export const setLang = (str: string): StringPayloadAction => {
   return {
-    type: SpeechToTextActions.SET_LANG,
+    type: SpeechToTextActions.SET_LANGUAGE,
     payload: str,
   };
 };

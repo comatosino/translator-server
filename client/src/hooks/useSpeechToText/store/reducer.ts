@@ -24,7 +24,7 @@ const speechToTextReducer: Reducer<
     case SpeechToTextActions.CLEAR_TRANSCRIPT:
       return __clearTranscript(state);
 
-    case SpeechToTextActions.SET_LANG:
+    case SpeechToTextActions.SET_LANGUAGE:
       return __setLang(state, action.payload);
 
     case SpeechToTextActions.SET_LISTENING:
