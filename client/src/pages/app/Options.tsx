@@ -46,12 +46,12 @@ const Options: React.FC<{
       </Typography>
 
       <FormControl>
-        <InputLabel>{`${speakOptions.language} available alternate voices`}</InputLabel>
+        <InputLabel>{`${speakOptions.language} alternate voices`}</InputLabel>
         <Select
           labelId="alt-voice-select-label"
           id="alt-voice-select"
           value={speakOptions.selectedVoice?.name || ""}
-          label={`${speakOptions.language}available alternate voices`}
+          label={`${speakOptions.language} alternate voices`}
           onChange={handleSetVoice}
         >
           {altVoices.map((voice) => {
@@ -62,7 +62,6 @@ const Options: React.FC<{
             );
           })}
         </Select>
-        <FormHelperText>With label + helper text</FormHelperText>
       </FormControl>
 
       <FormGroup>
