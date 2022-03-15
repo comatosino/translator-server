@@ -5,7 +5,7 @@ import {
   setTranscript,
   clearTranscript,
   setListening,
-  setLang,
+  setLanguage,
   setContinuous,
   setInterimResults,
 } from "./store/actions";
@@ -74,7 +74,7 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
       language: state.language,
       setLanguage: (lang: string): void => {
         state.speechToText.lang = lang;
-        dispatch(setLang(lang));
+        dispatch(setLanguage(lang));
       },
       async listen() {
         state.speechToText.start();
@@ -93,6 +93,7 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
 
   const options = useMemo((): SpeechToTextOptions => {
     return {
+      language: state.language,
       continuous: state.speechToText.continuous,
       setContinuous: (continuous: boolean) => {
         state.speechToText.continuous = continuous;
