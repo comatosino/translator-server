@@ -10,7 +10,7 @@ export const __clearTranscript: ReducerWithoutAction<SpeechToTextState> = (
   state
 ): SpeechToTextState => ({ ...state, transcript: "" });
 
-export const __setLang: Reducer<SpeechToTextState, string> = (
+export const __setLanguage: Reducer<SpeechToTextState, string> = (
   state,
   payload
 ): SpeechToTextState => ({ ...state, language: payload });
