@@ -1,5 +1,4 @@
 import {
-  Box,
   Divider,
   FormControl,
   FormControlLabel,
@@ -44,25 +43,6 @@ const Options: React.FC<{
         <Divider>Source Language Options</Divider>
       </Typography>
 
-      <FormControl>
-        <InputLabel>{`${speakOptions.language} alternate voices`}</InputLabel>
-        <Select
-          labelId="alt-voice-select-label"
-          id="alt-voice-select"
-          value={speakOptions.selectedVoice?.name || ""}
-          label={`${speakOptions.language} alternate voices`}
-          onChange={handleSetVoice}
-        >
-          {altVoices.map((voice) => {
-            return (
-              <MenuItem key={voice.name} value={voice.name}>
-                {voice.name}
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-
       <FormGroup>
         <FormControlLabel
           control={
@@ -89,6 +69,25 @@ const Options: React.FC<{
       <Typography component="h2">
         <Divider>Target Language Options</Divider>
       </Typography>
+
+      <FormControl>
+        <InputLabel>{`${speakOptions.language} alternate voices`}</InputLabel>
+        <Select
+          labelId="alt-voice-select-label"
+          id="alt-voice-select"
+          value={speakOptions.selectedVoice?.name || ""}
+          label={`${speakOptions.language} alternate voices`}
+          onChange={handleSetVoice}
+        >
+          {altVoices.map((voice) => {
+            return (
+              <MenuItem key={voice.name} value={voice.name}>
+                {voice.name}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
 
       <Typography id="volume-slider">Volume</Typography>
       <Slider
