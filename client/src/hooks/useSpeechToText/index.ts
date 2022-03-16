@@ -45,6 +45,7 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
     state.speechToText.interface.onend = (_e: Event) => {
       try {
         state.speechToText.listening = false;
+        state.speechToText.clearTranscript();
         dispatch(clearTranscript());
         dispatch(setListening(false));
       } catch (error) {
@@ -56,18 +57,13 @@ const useSpeechToText = (): UseSpeechToTextReturn => {
       _e: SpeechRecognitionEvent
     ): void => {
       console.log("NO SPEECH-TO-TEXT MATCH");
-      state.speechToText.clearTranscript();
-      dispatch(clearTranscript());
-      dispatch(setListening(false));
     };
 
     state.speechToText.interface.onerror = (
       e: SpeechRecognitionError
     ): void => {
-      console.log("ERROR", e.message, e.error);
-      state.speechToText.clearTranscript();
-      dispatch(clearTranscript());
-      dispatch(setListening(false));
+      const errMessage = e.message || e.error;
+      console.log("ERROR", errMessage);
     };
   });
 
