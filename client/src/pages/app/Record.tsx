@@ -18,17 +18,10 @@ const Record: React.FC = (): JSX.Element => {
           return (
             <Card key={translation._id}>
               <CardContent>
-                <Typography>{`source lang: ${translation.source}`}</Typography>
-
-                <Typography>
-                  {`source text: ${translation.sourceText}`}
-                </Typography>
-
-                <Typography>{`target lang: ${translation.target}`}</Typography>
-
-                <Typography>
-                  {`target lang: ${translation.targetText}`}
-                </Typography>
+                <Typography>{translation.source}</Typography>
+                <Typography>{translation.sourceText}</Typography>
+                <Typography>{translation.target}</Typography>
+                <Typography>{translation.targetText}</Typography>
               </CardContent>
             </Card>
           );
