@@ -1,6 +1,6 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Document } from "mongoose";
 
-interface Translation {
+interface Translation extends Document {
   source: string;
   sourceText: string;
   target: string;
@@ -31,5 +31,5 @@ const TranslationSchema = new Schema<Translation>(
   { timestamps: true }
 );
 
-const Translation = model("Translation", TranslationSchema);
+const Translation: Model<Translation> = model("Translation", TranslationSchema);
 export default Translation;
