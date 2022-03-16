@@ -32,6 +32,8 @@ export type Translation = {
   sourceText: string;
   target: string;
   targetText: string;
+  createdAt?: Date;
+  updatedAt?: Date;
 };
 
 export type AppApiGetUserResponse = {

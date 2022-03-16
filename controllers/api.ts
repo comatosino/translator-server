@@ -44,20 +44,18 @@ export const translate: RequestHandler = async (req, res) => {
       } = response.data;
       const [result] = translations;
 
-      const modelData = {
+      const newTranslation = await Translation.create({
         source: srcLang,
         sourceText: text,
         target: trgLang,
         targetText: result.translatedText,
-      };
-
-      const newTranslation = await Translation.create(modelData);
+      });
 
       await User.findByIdAndUpdate(req.userID, {
         $push: { translations: newTranslation._id },
       });
 
-      return res.status(200).json(modelData);
+      return res.status(200).json(newTranslation);
     }
     res.status(400).json({ error: "languages are the same" });
   } catch (error) {

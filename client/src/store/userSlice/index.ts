@@ -3,17 +3,17 @@ import { Translation } from "../../utils/API";
 
 export interface UserProfile {
   username?: string;
-  translations: Translation[];
+  translations?: Translation[];
 }
 
 export interface UserState {
-  profile: UserProfile | null;
+  profile: UserProfile;
   error: string;
   fetching: boolean;
 }
 
 export const initialState: UserState = {
-  profile: null,
+  profile: { username: "", translations: [] },
   error: "",
   fetching: true,
 };
@@ -26,7 +26,7 @@ export const userSlice = createSlice({
       state.profile = action.payload;
     },
     clearUser: (state) => {
-      state.profile = null;
+      state.profile = {};
     },
     setFetching: (state, action: PayloadAction<boolean>) => {
       state.fetching = action.payload;
@@ -34,9 +34,13 @@ export const userSlice = createSlice({
     setError: (state, action: PayloadAction<string>) => {
       state.error = action.payload;
     },
+    addTranslation: (state, action: PayloadAction<Translation>) => {
+      state.profile.translations?.unshift(action.payload);
+    },
   },
 });
 
-export const { setUser, clearUser, setFetching, setError } = userSlice.actions;
+export const { setUser, clearUser, setFetching, addTranslation } =
+  userSlice.actions;
 
 export default userSlice.reducer;
