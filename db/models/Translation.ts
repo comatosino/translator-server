@@ -1,4 +1,4 @@
-import { model, Schema, Document } from "mongoose";
+import { model, Model, Schema, Document } from "mongoose";
 
 interface Translation extends Document {
   source: string;
