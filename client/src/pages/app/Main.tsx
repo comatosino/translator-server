@@ -1,4 +1,6 @@
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
+import { useAppDispatch } from "../../store/hooks";
+import { addTranslation } from "../../store/userSlice";
 import API, { TranslationReqPayload } from "../../utils/API";
 import {
   setLanguage,
@@ -24,27 +26,27 @@ const Main: React.FC<{
   speaker: Speaker;
   langCodes: string[];
 }> = ({ microphone, speaker, langCodes }): JSX.Element => {
+  const userDispatch = useAppDispatch();
   const { language: srcLang, transcript } = microphone;
   const { language: trgLang } = speaker;
 
+  const translate = useCallback(
+    async (transcript: string) => {
+      const payload: TranslationReqPayload = {
+        srcLang,
+        text: transcript,
+        trgLang,
+      };
+      const response = await API.translate(payload);
+      const translation = response.data;
+      userDispatch(addTranslation(translation));
+    },
+    [srcLang, trgLang, userDispatch]
+  );
+
   useEffect(() => {
     if (transcript) translate(transcript);
-  }, [transcript]);
-
-  const translate = async (transcript: string) => {
-    const payload: TranslationReqPayload = {
-      srcLang,
-      text: transcript,
-      trgLang,
-    };
-    const response = await API.translate(payload);
-    const { source, sourceText, target, targetText } = response.data;
-
-    console.log("source: ", source);
-    console.log("sourceText: ", sourceText);
-    console.log("target: ", target);
-    console.log("targetText: ", targetText);
-  };
+  }, [translate, transcript]);
 
   const handleSetSourceLang = (e: SelectChangeEvent<string>) => {
     microphone.setLanguage(e.target.value);
