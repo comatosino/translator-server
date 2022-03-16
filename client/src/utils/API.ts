@@ -27,11 +27,12 @@ export type TranslationReqPayload = {
 };
 
 export type Translation = {
+  _id: string;
   source: string;
   sourceText: string;
   target: string;
   targetText: string;
-}
+};
 
 export type AppApiGetUserResponse = {
   profile: UserProfile;

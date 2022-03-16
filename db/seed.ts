@@ -8,10 +8,10 @@ const addData = async () => {
       password: "password",
       translations: [
         await Translation.create({
-          srcLang: "en-US",
-          srcText: "hello",
-          trgLang: "es-US",
-          trgText: "hola",
+          source: "en-US",
+          sourceText: "hello",
+          target: "es-US",
+          targetText: "hola",
         }),
       ],
     });
@@ -21,10 +21,17 @@ const addData = async () => {
 };
 
 const seed = async () => {
-  const connection = await db.connect();
-  if (connection) {
-    await connection?.dropDatabase();
-    await addData();
+  try {
+    const connection = await db.connect();
+    if (connection) {
+      await connection?.dropDatabase();
+      await addData();
+    }
+    console.log("db seeded successfully!");
+  } catch (error) {
+    console.log("error seeding database!");
+    console.error(error);
+  } finally {
     await db.disconnect();
   }
 };

@@ -58,7 +58,7 @@ export const login: RequestHandler = async (req, res) => {
     if (!req.body.username || !req.body.password) {
       return res.status(400).json({ error: "Username and password required" });
     }
-    const user = await User.findOne({ username: req.body.username });
+    const user = await User.findOne({ username: req.body.username }).populate("translations");
 
     if (!user) {
       res.status(401).json({ error: "Wrong username and/or password" });

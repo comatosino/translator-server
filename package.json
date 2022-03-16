@@ -11,7 +11,8 @@
     "server": "nodemon --ignore client/* --exec ts-node server.ts",
     "client": "cd client && npm start && cd ..",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "install": "cd client && npm install"
+    "install": "cd client && npm install",
+    "seed": "cd db && ts-node seed.ts"
   },
   "repository": {
     "type": "git",
