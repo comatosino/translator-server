@@ -32,20 +32,27 @@ const Main: React.FC<{
 
   const translate = useCallback(
     async (transcript: string) => {
-      const payload: TranslationReqPayload = {
-        srcLang,
-        text: transcript,
-        trgLang,
-      };
-      const response = await API.translate(payload);
-      const translation = response.data;
-      userDispatch(addTranslation(translation));
+      if (srcLang.substring(0, 2) === trgLang.substring(0, 2)) {
+        speaker.speak(transcript);
+      } else {
+        const payload: TranslationReqPayload = {
+          srcLang,
+          text: transcript,
+          trgLang,
+        };
+        const response = await API.translate(payload);
+        const translation = response.data;
+        speaker.speak(translation.targetText);
+        userDispatch(addTranslation(translation));
+      }
     },
-    [srcLang, trgLang, userDispatch]
+    [speaker, srcLang, trgLang, userDispatch]
   );
 
   useEffect(() => {
-    if (transcript) translate(transcript);
+    if (transcript) {
+      translate(transcript);
+    }
   }, [translate, transcript]);
 
   const handleSetSourceLang = (e: SelectChangeEvent<string>) => {
