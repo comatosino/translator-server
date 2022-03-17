@@ -47,6 +47,7 @@ const Options: React.FC<{
         <FormControlLabel
           control={
             <Switch
+              disabled
               checked={micOptions.continuous}
               onChange={() => micOptions.setContinuous(!micOptions.continuous)}
             />
@@ -56,6 +57,7 @@ const Options: React.FC<{
         <FormControlLabel
           control={
             <Switch
+              disabled
               checked={micOptions.interimResults}
               onChange={() =>
                 micOptions.setInterimResults(!micOptions.interimResults)
