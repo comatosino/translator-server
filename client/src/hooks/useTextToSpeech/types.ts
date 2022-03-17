@@ -17,7 +17,7 @@ export type Speaker = {
   dispatch: React.Dispatch<TextToSpeechReducerAction>;
   getVoiceMap: () => SpeechSynthesisVoiceMap | undefined;
   getVoiceArray: () => SpeechSynthesisVoice[];
-  speak: (text: string, options: TextToSpeechOptions) => void;
+  speak: (script: string) => void;
   pause: () => void;
   resume: () => void;
   cancel: () => void;

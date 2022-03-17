@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useReducer } from "react";
-import { setSelectedVoice, setVoices, setLanguage } from "./store/actions";
+import { setSelectedVoice, setSpeaking, setVoices } from "./store/actions";
 import INITIAL_STATE from "./store/init";
 import textToSpeechReducer from "./store/reducer";
 import TextToSpeech from "./TextToSpeech";
@@ -17,7 +17,7 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
       dispatch(setVoices(state.textToSpeech.voices));
       dispatch(setSelectedVoice(localVoice));
     }
-  }, [state.textToSpeech.voices]);
+  }, []);
 
   const speaker = useMemo((): Speaker => {
     return {
@@ -30,8 +30,21 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
       getVoiceArray: () => {
         return state.textToSpeech.getVoiceArray();
       },
-      speak(text: string, options: TextToSpeechOptions) {
-        state.textToSpeech.speak(text, options);
+      speak(script: string) {
+        if (state.selectedVoice) {
+          const utterance = new SpeechSynthesisUtterance(script);
+          utterance.voice = state.selectedVoice;
+          utterance.lang = state.language;
+          utterance.pitch = state.pitch as number;
+          utterance.rate = state.rate as number;
+          utterance.volume = state.volume as number;
+
+          utterance.onstart = () => dispatch(setSpeaking(true));
+          utterance.onend = () => dispatch(setSpeaking(false));
+          utterance.onerror = (e) => console.log("ERROR: ", e.error);
+
+          state.textToSpeech.speak(utterance);
+        }
       },
       pause() {
         state.textToSpeech.pause();
@@ -43,7 +56,15 @@ const useTextToSpeech = (): UseTextToSpeechReturn => {
         state.textToSpeech.cancel();
       },
     };
-  }, [state.language, state.speaking, state.textToSpeech]);
+  }, [
+    state.language,
+    state.speaking,
+    state.textToSpeech,
+    state.selectedVoice,
+    state.pitch,
+    state.rate,
+    state.volume,
+  ]);
 
   const options = useMemo((): TextToSpeechOptions => {
     return {

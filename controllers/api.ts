@@ -30,6 +30,7 @@ export const translate: RequestHandler = async (req, res) => {
       const response = await axios.post(
         url,
         {
+          format: "text",
           q: text,
           source,
           target,

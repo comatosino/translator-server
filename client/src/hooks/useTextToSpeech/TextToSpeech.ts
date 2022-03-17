@@ -1,9 +1,10 @@
-import { SpeechSynthesisVoiceMap, TextToSpeechOptions } from "./types";
+import { SpeechSynthesisVoiceMap } from "./types";
 
 export default class TextToSpeech {
   private static _instance: TextToSpeech;
   public interface: SpeechSynthesis;
   public voices: SpeechSynthesisVoiceMap | null = null;
+  public speaking: boolean = false;
 
   private constructor() {
     this.interface = window.speechSynthesis;
@@ -40,24 +41,10 @@ export default class TextToSpeech {
     return this.voices;
   }
 
-  // TODO: MODIFY TO ACCEPT NEW PARAMS
-  // now we receive the voice itself
-  speak(text: string, options: TextToSpeechOptions): void {
-    console.log(text);
-    console.log(options);
-    // const voices = this.getVoiceArray();
-    // const utteranceVoice = voices.find(
-    //   (voice) => voice.name === options.voice.substring(6)
-    // );
-
-    // if (utteranceVoice) {
-    //   const utterance = new SpeechSynthesisUtterance(text);
-    //   utterance.voice = utteranceVoice;
-    //   utterance.volume = options.volume as number;
-    //   utterance.pitch = options.pitch as number;
-    //   utterance.rate = options.rate as number;
-    //   this.interface.speak(utterance);
-    // }
+  speak(utterance: SpeechSynthesisUtterance): void {
+    if (utterance) {
+      this.interface.speak(utterance);
+    }
   }
 
   pause(): void {
