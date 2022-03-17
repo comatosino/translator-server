@@ -40,36 +40,7 @@ const Options: React.FC<{
   return (
     <Stack spacing={2}>
       <Typography component="h2">
-        <Divider>Source Language Options</Divider>
-      </Typography>
-
-      <FormGroup>
-        <FormControlLabel
-          control={
-            <Switch
-              disabled
-              checked={micOptions.continuous}
-              onChange={() => micOptions.setContinuous(!micOptions.continuous)}
-            />
-          }
-          label="Continuous Listening?"
-        />
-        <FormControlLabel
-          control={
-            <Switch
-              disabled
-              checked={micOptions.interimResults}
-              onChange={() =>
-                micOptions.setInterimResults(!micOptions.interimResults)
-              }
-            />
-          }
-          label="Interim Results?"
-        />
-      </FormGroup>
-
-      <Typography component="h2">
-        <Divider>Target Language Options</Divider>
+        <Divider>Voice Options</Divider>
       </Typography>
 
       <FormControl>
