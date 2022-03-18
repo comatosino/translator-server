@@ -1,5 +1,5 @@
 import { ChangeEventHandler, useState } from "react";
-import { Box, Button, Stack, TextField } from "@mui/material";
+import { Button, Stack, TextField } from "@mui/material";
 
 import { useAppDispatch } from "../../store/hooks";
 import { register, login } from "../../store/userSlice/thunks";
@@ -57,15 +57,7 @@ const Auth: React.FC<{}> = (): JSX.Element => {
   };
 
   return (
-    <Box
-      sx={{
-        height: 1,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
+    <>
       <form onSubmit={handleFormSubmit}>
         <Stack spacing={2}>
           <TextField
@@ -111,7 +103,7 @@ const Auth: React.FC<{}> = (): JSX.Element => {
           {Form[Form.LOGIN]}
         </Button>
       )}
-    </Box>
+    </>
   );
 };
 
