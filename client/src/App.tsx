@@ -4,7 +4,7 @@ import { getUser } from "./store/userSlice/thunks";
 import { setFetching } from "./store/userSlice";
 
 import { Profile } from "./pages/auth/";
-import { Loading } from "./pages/app";
+import { Container, Box, CircularProgress } from "@mui/material";
 
 const App: React.FC = (): JSX.Element => {
   const userDispatch = useAppDispatch();
@@ -16,7 +16,11 @@ const App: React.FC = (): JSX.Element => {
     else userDispatch(setFetching(false));
   }, [userDispatch]);
 
-  return fetchingUser ? <Loading /> : <Profile />;
+  return (
+    <Container sx={{height: '100%'}} maxWidth="sm">
+      <Box sx={{height: '100%', position: 'relative'}}>{fetchingUser ? <CircularProgress /> : <Profile />}</Box>
+    </Container>
+  );
 };
 
 export default App;
