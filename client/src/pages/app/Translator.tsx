@@ -1,16 +1,18 @@
 import { useState } from "react";
 import { UserProfile } from "../../store/userSlice";
-import { useAppDispatch } from "../../store/hooks";
-import { logout } from "../../store/userSlice/thunks";
 import useSpeechToText from "../../hooks/useSpeechToText";
 import useTextToSpeech from "../../hooks/useTextToSpeech";
+import { useAppDispatch } from "../../store/hooks";
+import { logout } from "../../store/userSlice/thunks";
 import useMuiLangLists from "../../hooks/userMuiLangLists";
-
 import { Main, Options, Record } from ".";
-import { Box, Container, Fab, Typography } from "@mui/material";
-
-import Nav from "../../components/Nav";
+import { Typography, SpeedDial, SpeedDialAction, Fab } from "@mui/material";
 import LogoutIcon from "@mui/icons-material/Logout";
+import MenuIcon from "@mui/icons-material/Menu";
+import TuneIcon from "@mui/icons-material/Tune";
+import AddIcon from "@mui/icons-material/Add";
+import HistoryIcon from "@mui/icons-material/History";
+import MicNoneIcon from "@mui/icons-material/MicNone";
 
 export enum Page {
   HISTORY,
@@ -36,68 +38,80 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
 
   const [langCodes] = useMuiLangLists(speaker);
 
+  const handleLogout = () => {
+    userDispatch(logout());
+  };
+
   if (!speechToTextAvailable || !textToSpeechAvailable) {
     return (
-      <Box
-        sx={{
-          height: '100vh',
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
+      <>
         {!speechToTextAvailable && (
           <Typography>Speech to Text not supported on this browser</Typography>
         )}
         {!textToSpeechAvailable && (
           <Typography>Text to Speech not supported on this browser</Typography>
         )}
-      </Box>
+      </>
     );
   }
 
   return (
-    <Container maxWidth="sm">
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
+    <>
+      <SpeedDial
+        ariaLabel="speed dial menu"
+        direction="down"
+        sx={{ position: "absolute", top: 20, right: 20 }}
+        icon={<MenuIcon />}
       >
+        <SpeedDialAction
+          onClick={() => setPage(Page.OPTIONS)}
+          icon={<TuneIcon />}
+          tooltipTitle={"Options"}
+        />
+
+        <SpeedDialAction
+          onClick={handleLogout}
+          icon={<LogoutIcon />}
+          tooltipTitle={"Logout"}
+        />
+      </SpeedDial>
+
+      {/* GOTO HISTORY */}
+      {page === Page.MAIN && (
         <Fab
-          onClick={() => userDispatch(logout())}
-          sx={{
-            position: "fixed",
-            top: 20,
-            right: 20,
-          }}
+          onClick={() => setPage(Page.HISTORY)}
+          sx={{ position: "absolute", bottom: 20 }}
           color="primary"
           aria-label="add"
         >
-          <LogoutIcon />
+          <HistoryIcon />
         </Fab>
+      )}
 
-        <Nav page={page} setPage={setPage} />
-        {page === Page.MAIN && (
-          <Main
-            speaker={speaker}
-            microphone={microphone}
-            langCodes={langCodes}
-          />
-        )}
-        {page === Page.OPTIONS && (
-          <Options
-            micOptions={micOptions}
-            speakOptions={speakOptions}
-            getVoices={speaker.getVoiceMap}
-          />
-        )}
-        {page === Page.HISTORY && <Record />}
-      </Box>
-    </Container>
+      {/* GOTO MAIN */}
+      {(page === Page.HISTORY || page === Page.OPTIONS) && (
+        <Fab
+          onClick={() => setPage(Page.MAIN)}
+          sx={{ position: "absolute", bottom: 20, right: 20 }}
+          color="primary"
+          aria-label="add"
+        >
+          <MicNoneIcon />
+        </Fab>
+      )}
+
+      {page === Page.MAIN && (
+        <Main speaker={speaker} microphone={microphone} langCodes={langCodes} />
+      )}
+      {page === Page.OPTIONS && (
+        <Options
+          micOptions={micOptions}
+          speakOptions={speakOptions}
+          getVoices={speaker.getVoiceMap}
+        />
+      )}
+      {page === Page.HISTORY && <Record />}
+    </>
   );
 };
 
