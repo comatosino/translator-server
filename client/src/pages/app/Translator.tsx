@@ -1,18 +1,16 @@
 import { useState } from "react";
+import { useAppDispatch } from "../../store/hooks";
 import { UserProfile } from "../../store/userSlice";
+import { logout } from "../../store/userSlice/thunks";
 import useSpeechToText from "../../hooks/useSpeechToText";
 import useTextToSpeech from "../../hooks/useTextToSpeech";
-import { useAppDispatch } from "../../store/hooks";
-import { logout } from "../../store/userSlice/thunks";
-import useMuiLangLists from "../../hooks/userMuiLangLists";
+import useMuiLangLists from "../../hooks/useMuiLangLists";
 import { Main, Options, Record } from ".";
-import { Typography, SpeedDial, SpeedDialAction, Fab } from "@mui/material";
-import LogoutIcon from "@mui/icons-material/Logout";
-import MenuIcon from "@mui/icons-material/Menu";
-import TuneIcon from "@mui/icons-material/Tune";
-import AddIcon from "@mui/icons-material/Add";
-import HistoryIcon from "@mui/icons-material/History";
-import MicNoneIcon from "@mui/icons-material/MicNone";
+
+import { Typography, Box } from "@mui/material";
+
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
 
 export enum Page {
   HISTORY,
@@ -56,50 +54,8 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
   }
 
   return (
-    <>
-      <SpeedDial
-        ariaLabel="speed dial menu"
-        direction="down"
-        sx={{ position: "absolute", top: 20, right: 20 }}
-        icon={<MenuIcon />}
-      >
-        <SpeedDialAction
-          onClick={() => setPage(Page.OPTIONS)}
-          icon={<TuneIcon />}
-          tooltipTitle={"Options"}
-        />
-
-        <SpeedDialAction
-          onClick={handleLogout}
-          icon={<LogoutIcon />}
-          tooltipTitle={"Logout"}
-        />
-      </SpeedDial>
-
-      {/* GOTO HISTORY */}
-      {page === Page.MAIN && (
-        <Fab
-          onClick={() => setPage(Page.HISTORY)}
-          sx={{ position: "absolute", bottom: 20 }}
-          color="primary"
-          aria-label="add"
-        >
-          <HistoryIcon />
-        </Fab>
-      )}
-
-      {/* GOTO MAIN */}
-      {(page === Page.HISTORY || page === Page.OPTIONS) && (
-        <Fab
-          onClick={() => setPage(Page.MAIN)}
-          sx={{ position: "absolute", bottom: 20, right: 20 }}
-          color="primary"
-          aria-label="add"
-        >
-          <MicNoneIcon />
-        </Fab>
-      )}
-
+    <Box width={"100%"} height={"100%"}>
+      <Header handleLogout={handleLogout} setPage={setPage} />
       {page === Page.MAIN && (
         <Main speaker={speaker} microphone={microphone} langCodes={langCodes} />
       )}
@@ -111,7 +67,8 @@ const Translator: React.FC<{ user: UserProfile }> = (): JSX.Element => {
         />
       )}
       {page === Page.HISTORY && <Record />}
-    </>
+      <Footer page={page} setPage={setPage} />
+    </Box>
   );
 };
 
