@@ -2,10 +2,10 @@ import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "./store/hooks";
 import { getUser } from "./store/userSlice/thunks";
 import { setFetching } from "./store/userSlice";
-
-import { Profile } from "./pages/auth/";
-import { Container } from "@mui/material";
-import Loading from "./pages/auth/Loading";
+import { Loading, Profile } from "./pages/auth";
+import { Box, CircularProgress, Container, Paper } from "@mui/material";
+import ThemeProvider from "@mui/system/ThemeProvider";
+import theme from "./themes/theme";
 
 const App: React.FC = (): JSX.Element => {
   const userDispatch = useAppDispatch();
@@ -18,7 +18,24 @@ const App: React.FC = (): JSX.Element => {
   }, [userDispatch]);
 
   return (
-    <Container maxWidth="sm">{fetchingUser ? <Loading /> : <Profile />}</Container>
+    <ThemeProvider theme={theme}>
+      <Container id="app" maxWidth="sm">
+        <Paper>
+          <Box
+            sx={{
+              height: "100vh",
+
+              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            {fetchingUser ? <CircularProgress /> : <Profile />}
+          </Box>
+        </Paper>
+      </Container>
+    </ThemeProvider>
   );
 };
 
