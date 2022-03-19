@@ -1,5 +1,4 @@
 import {
-  Box,
   Divider,
   FormControl,
   InputLabel,
@@ -36,87 +35,77 @@ const Options: React.FC<{
   };
 
   return (
-    <Box
-      sx={{
-        width: 1,
-        height: "100%",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: " center",
-      }}
-    >
-      <Stack spacing={2}>
-        <Typography component="h2">
-          <Divider>Voice Options</Divider>
-        </Typography>
+    <Stack spacing={3} padding={3} height={.8} boxSizing={'border-box'}>
+      <Typography component="h2">
+        <Divider>Voice Options</Divider>
+      </Typography>
 
-        <FormControl>
-          <InputLabel>{`${speakOptions.language} alternate voices`}</InputLabel>
-          <Select
-            labelId="alt-voice-select-label"
-            id="alt-voice-select"
-            value={speakOptions.selectedVoice?.name || ""}
-            label={`${speakOptions.language} alternate voices`}
-            onChange={handleSetVoice}
-          >
-            {altVoices.map((voice) => {
-              return (
-                <MenuItem key={voice.name} value={voice.name}>
-                  {voice.name}
-                </MenuItem>
-              );
-            })}
-          </Select>
-        </FormControl>
+      <FormControl>
+        <InputLabel>{`${speakOptions.language} alternate voices`}</InputLabel>
+        <Select
+          labelId="alt-voice-select-label"
+          id="alt-voice-select"
+          value={speakOptions.selectedVoice?.name || ""}
+          label={`${speakOptions.language} alternate voices`}
+          onChange={handleSetVoice}
+        >
+          {altVoices.map((voice) => {
+            return (
+              <MenuItem key={voice.name} value={voice.name}>
+                {voice.name}
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
 
-        <Typography id="volume-slider">Volume</Typography>
-        <Slider
-          name={TextToSpeechActions[TextToSpeechActions.SET_VOLUME]}
-          aria-labelledby="volume-slider"
-          value={speakOptions.volume}
-          getAriaValueText={() => `${speakOptions.volume}`}
-          valueLabelDisplay="auto"
-          step={0.25}
-          marks
-          min={0}
-          max={1}
-          onChange={(_e, value) =>
-            speakOptions.dispatch(setVolume(value as number))
-          }
-        />
-        <Typography id="pitch-slider">Pitch</Typography>
-        <Slider
-          name={TextToSpeechActions[TextToSpeechActions.SET_PITCH]}
-          aria-labelledby="pitch-slider"
-          value={speakOptions.pitch}
-          getAriaValueText={() => `${speakOptions.pitch}`}
-          valueLabelDisplay="auto"
-          step={0.25}
-          marks
-          min={0}
-          max={2}
-          onChange={(_e, value) =>
-            speakOptions.dispatch(setPitch(value as number))
-          }
-        />
+      <Typography id="volume-slider">Volume</Typography>
+      <Slider
+        name={TextToSpeechActions[TextToSpeechActions.SET_VOLUME]}
+        aria-labelledby="volume-slider"
+        value={speakOptions.volume}
+        getAriaValueText={() => `${speakOptions.volume}`}
+        valueLabelDisplay="auto"
+        step={0.25}
+        marks
+        min={0}
+        max={1}
+        onChange={(_e, value) =>
+          speakOptions.dispatch(setVolume(value as number))
+        }
+      />
+      <Typography id="pitch-slider">Pitch</Typography>
+      <Slider
+        name={TextToSpeechActions[TextToSpeechActions.SET_PITCH]}
+        aria-labelledby="pitch-slider"
+        value={speakOptions.pitch}
+        getAriaValueText={() => `${speakOptions.pitch}`}
+        valueLabelDisplay="auto"
+        step={0.25}
+        marks
+        min={0}
+        max={2}
+        onChange={(_e, value) =>
+          speakOptions.dispatch(setPitch(value as number))
+        }
+      />
 
-        <Typography id="rate-slider">Rate</Typography>
-        <Slider
-          name={TextToSpeechActions[TextToSpeechActions.SET_RATE]}
-          aria-labelledby="rate-slider"
-          value={speakOptions.rate}
-          getAriaValueText={() => `${speakOptions.rate}`}
-          valueLabelDisplay="auto"
-          step={0.1}
-          marks
-          min={0.1}
-          max={10}
-          onChange={(_e, value) =>
-            speakOptions.dispatch(setRate(value as number))
-          }
-        />
-      </Stack>
-    </Box>
+      <Typography id="rate-slider">Rate</Typography>
+      <Slider
+        name={TextToSpeechActions[TextToSpeechActions.SET_RATE]}
+        aria-labelledby="rate-slider"
+        value={speakOptions.rate}
+        getAriaValueText={() => `${speakOptions.rate}`}
+        valueLabelDisplay="auto"
+        step={0.1}
+        marks
+        min={0.1}
+        max={10}
+        onChange={(_e, value) =>
+          speakOptions.dispatch(setRate(value as number))
+        }
+      />
+    </Stack>
   );
 };
 
