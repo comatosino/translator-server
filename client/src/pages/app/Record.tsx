@@ -1,5 +1,5 @@
 import { useAppSelector } from "../../store/hooks";
-import { Card, CardContent, Container, Stack, Typography } from "@mui/material";
+import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
 
 const Record: React.FC = (): JSX.Element => {
   const translations = useAppSelector(
@@ -10,24 +10,48 @@ const Record: React.FC = (): JSX.Element => {
     return <Typography>No history to display!</Typography>;
   }
   return (
-    <Container>
-      <Stack>
-        <Typography align="center">HISTORY</Typography>
+    <Stack
+      spacing={1}
+      overflow={"auto"}
+      maxHeight={0.8}
+      padding={1}
+      boxSizing={"border-box"}
+    >
+      {translations.map((translation) => {
+        const [srcLangCode, srcCountryCode] = translation.source.split("-");
+        const [trgLangCode, trgCountryCode] = translation.target.split("-");
 
-        {translations.map((translation) => {
-          return (
-            <Card key={translation._id}>
+        return (
+          <Box key={translation._id} height={1} padding={1}>
+            <Card elevation={2}>
               <CardContent>
-                <Typography>{translation.source}</Typography>
-                <Typography>{translation.sourceText}</Typography>
-                <Typography>{translation.target}</Typography>
-                <Typography>{translation.targetText}</Typography>
+                <Box>
+                  <Typography>{srcLangCode}</Typography>
+                  <img
+                    loading="lazy"
+                    width="50"
+                    src={`https://flagcdn.com/${srcCountryCode.toLowerCase()}.svg`}
+                    alt={""}
+                  />
+                  <Typography>{translation.sourceText}</Typography>
+                </Box>
+
+                <Box>
+                  <Typography>{trgLangCode}</Typography>
+                  <img
+                    loading="lazy"
+                    width="50"
+                    src={`https://flagcdn.com/${trgCountryCode.toLowerCase()}.svg`}
+                    alt={""}
+                  />
+                  <Typography>{translation.targetText}</Typography>
+                </Box>
               </CardContent>
             </Card>
-          );
-        })}
-      </Stack>
-    </Container>
+          </Box>
+        );
+      })}
+    </Stack>
   );
 };
 export default Record;
