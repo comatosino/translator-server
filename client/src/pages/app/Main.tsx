@@ -9,7 +9,6 @@ import {
 import { Microphone } from "../../hooks/useSpeechToText/types";
 import { Speaker } from "../../hooks/useTextToSpeech/types";
 import {
-  Box,
   FormControl,
   InputLabel,
   MenuItem,
@@ -17,9 +16,10 @@ import {
   SelectChangeEvent,
   IconButton,
   Stack,
-  FormHelperText,
 } from "@mui/material";
+
 import MicNoneIcon from "@mui/icons-material/MicNone";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 const Main: React.FC<{
   microphone: Microphone;
@@ -73,115 +73,95 @@ const Main: React.FC<{
   };
 
   return (
-    <Box
-      sx={{
-        height: 1,
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-      }}
+    <Stack
+      spacing={1}
+      overflow={"auto"}
+      minHeight={0.8}
+      maxHeight={0.8}
+      padding={1}
+      boxSizing={"border-box"}
     >
-      <Stack
-        sx={{ display: "flex", alignItems: "center" }}
-        direction="row"
-        spacing={10}
-      >
-        <FormControl variant="standard">
-          <InputLabel id="src-lang">Source Language</InputLabel>
-          <Select
-            label="Source Language"
-            id="src-lang"
-            name="source"
-            value={microphone.language || ""}
-            onChange={handleSetSourceLang}
-          >
-            {langCodes.map((code) => {
-              const [lang, country] = code.split("-");
+      <FormControl variant="standard">
+        <InputLabel id="src-lang">{srcLang}</InputLabel>
+        <Select
+          label="Source Language"
+          id="src-lang"
+          name="source"
+          value={microphone.language || ""}
+          onChange={handleSetSourceLang}
+        >
+          {langCodes.map((code) => {
+            const [lang, country] = code.split("-");
 
-              if (lang === "es" && country === "US") {
-                return (
-                  <MenuItem key={code} value={code}>
-                    <img
-                      loading="lazy"
-                      width="100"
-                      src={`https://flagcdn.com/mx.svg`}
-                      alt={""}
-                    />
-                  </MenuItem>
-                );
-              }
-
+            if (lang === "es" && country === "US") {
               return (
                 <MenuItem key={code} value={code}>
                   <img
                     loading="lazy"
-                    width="100"
-                    src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
+                    width="50"
+                    src={`https://flagcdn.com/mx.svg`}
                     alt={""}
                   />
                 </MenuItem>
               );
-            })}
-          </Select>
-          <FormHelperText>{microphone.language}</FormHelperText>
-        </FormControl>
+            }
 
-        <FormControl variant="standard">
-          <InputLabel id="src-lang">Target Language</InputLabel>
-          <Select
-            label="Target Language"
-            id="trg-lang"
-            name="target"
-            value={speaker.language || ""}
-            onChange={handleSetTargetLang}
-          >
-            {langCodes.map((code) => {
-              const [lang, country] = code.split("-");
+            return (
+              <MenuItem key={code} value={code}>
+                <img
+                  loading="lazy"
+                  width="50"
+                  src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
+                  alt={""}
+                />
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
+      <ArrowForwardIosIcon />
+      <FormControl variant="standard">
+        <InputLabel id="src-lang">{trgLang}</InputLabel>
+        <Select
+          label="Target Language"
+          id="trg-lang"
+          name="target"
+          value={speaker.language || ""}
+          onChange={handleSetTargetLang}
+        >
+          {langCodes.map((code) => {
+            const [lang, country] = code.split("-");
 
-              if (lang === "es" && country === "US") {
-                return (
-                  <MenuItem key={code} value={code}>
-                    <img
-                      loading="lazy"
-                      width="100"
-                      src={`https://flagcdn.com/mx.svg`}
-                      alt={""}
-                    />
-                  </MenuItem>
-                );
-              }
+            if (lang === "es" && country === "US") {
               return (
                 <MenuItem key={code} value={code}>
                   <img
                     loading="lazy"
-                    width="100"
-                    src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
+                    width="50"
+                    src={`https://flagcdn.com/mx.svg`}
                     alt={""}
                   />
                 </MenuItem>
               );
-            })}
-          </Select>
+            }
+            return (
+              <MenuItem key={code} value={code}>
+                <img
+                  loading="lazy"
+                  width="50"
+                  src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
+                  alt={""}
+                />
+              </MenuItem>
+            );
+          })}
+        </Select>
+      </FormControl>
 
-          {speaker.language === "es-US" ? (
-            <FormHelperText>{"es-MX"}</FormHelperText>
-          ) : (
-            <FormHelperText>{speaker.language}</FormHelperText>
-          )}
-        </FormControl>
-      </Stack>
-
-      <IconButton
-        onClick={handleListen}
-        sx={{
-          position: "fixed",
-          bottom: 100,
-        }}
-        aria-label="microphone"
-      >
+      <IconButton onClick={handleListen} aria-label="microphone">
         <MicNoneIcon sx={{ fontSize: "5em" }} />
       </IconButton>
-    </Box>
+    </Stack>
   );
 };
 
