@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { useAppSelector, useAppDispatch } from "./store/hooks";
 import { getUser } from "./store/userSlice/thunks";
 import { setFetching } from "./store/userSlice";
-import { Loading, Profile } from "./pages/auth";
+import { Profile } from "./pages/auth";
 import { Box, CircularProgress, Container, Paper } from "@mui/material";
 import ThemeProvider from "@mui/system/ThemeProvider";
 import theme from "./themes/theme";
@@ -23,8 +23,7 @@ const App: React.FC = (): JSX.Element => {
         <Paper>
           <Box
             sx={{
-              height: "100vh",
-
+              height:'100vh',
               width: "100%",
               display: "flex",
               alignItems: "center",
