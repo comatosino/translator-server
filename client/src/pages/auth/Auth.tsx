@@ -1,5 +1,5 @@
 import { ChangeEventHandler, useState } from "react";
-import { Button, Stack, TextField } from "@mui/material";
+import { Box, Button, Stack, TextField, Typography } from "@mui/material";
 
 import { useAppDispatch } from "../../store/hooks";
 import { register, login } from "../../store/userSlice/thunks";
@@ -57,53 +57,61 @@ const Auth: React.FC<{}> = (): JSX.Element => {
   };
 
   return (
-    <>
-      <form onSubmit={handleFormSubmit}>
-        <Stack spacing={2}>
-          <TextField
-            type="text"
-            label="Username"
-            name="username"
-            value={formData.username}
-            onChange={handleFormInputChange}
-          />
+    <Stack height={500} width={1} padding={2} justifyContent={"space-between"}>
+      <Box>
+        <Typography padding={3} textAlign={"center"}>
+          {Form[formType]}
+        </Typography>
 
-          <TextField
-            type="password"
-            label="Password"
-            name="password"
-            value={formData.password}
-            onChange={handleFormInputChange}
-          />
-
-          {formType === Form.REGISTER && (
+        <form onSubmit={handleFormSubmit}>
+          <Stack spacing={2} width={1}>
             <TextField
-              label="Confirm Password"
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
+              type="text"
+              label="Username *"
+              name="username"
+              value={formData.username}
               onChange={handleFormInputChange}
             />
-          )}
 
-          <Button type="submit" variant="contained">
-            {Form[formType]}
-          </Button>
-        </Stack>
-      </form>
+            <TextField
+              type="password"
+              label="Password *"
+              name="password"
+              value={formData.password}
+              onChange={handleFormInputChange}
+            />
+
+            {formType === Form.REGISTER && (
+              <TextField
+                label="Confirm Password *"
+                type="password"
+                name="confirmPassword"
+                value={formData.confirmPassword}
+                onChange={handleFormInputChange}
+              />
+            )}
+
+            <Box textAlign={"center"} paddingTop={3}>
+              <Button type="submit" variant="contained" fullWidth>
+                {Form[formType]}
+              </Button>
+            </Box>
+          </Stack>
+        </form>
+      </Box>
 
       {formType === Form.LOGIN && (
-        <Button onClick={() => setFormType(Form.REGISTER)}>
-          {Form[Form.REGISTER]}
+        <Button onClick={() => setFormType(Form.REGISTER)} fullWidth>
+          {`Don't have an account? ${Form[Form.REGISTER]}`}
         </Button>
       )}
 
       {formType === Form.REGISTER && (
-        <Button onClick={() => setFormType(Form.LOGIN)}>
-          {Form[Form.LOGIN]}
+        <Button onClick={() => setFormType(Form.LOGIN)} fullWidth>
+          {`Already have an account? ${Form[Form.LOGIN]}`}
         </Button>
       )}
-    </>
+    </Stack>
   );
 };
 
