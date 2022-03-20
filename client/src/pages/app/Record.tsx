@@ -1,5 +1,14 @@
 import { useAppSelector } from "../../store/hooks";
-import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  Card,
+  CardContent,
+  Stack,
+  Typography,
+  Divider,
+  IconButton,
+} from "@mui/material";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 
 const Record: React.FC = (): JSX.Element => {
   const translations = useAppSelector(
@@ -9,11 +18,12 @@ const Record: React.FC = (): JSX.Element => {
   if (!translations || !translations.length) {
     return <Typography>No history to display!</Typography>;
   }
+
   return (
     <Stack
-      spacing={1}
       overflow={"auto"}
       maxHeight={0.8}
+      minHeight={0.8}
       padding={1}
       boxSizing={"border-box"}
     >
@@ -22,10 +32,21 @@ const Record: React.FC = (): JSX.Element => {
         const [trgLangCode, trgCountryCode] = translation.target.split("-");
 
         return (
-          <Box key={translation._id} height={1} padding={1}>
-            <Card elevation={2}>
+          <Box
+            key={translation._id}
+            height={1}
+            margin={1}
+            position={"relative"}
+          >
+            <Card elevation={10}>
+              <Box position={"absolute"} top={10} right={0}>
+                <IconButton aria-label="delete">
+                  <DeleteForeverIcon />
+                </IconButton>
+              </Box>
+
               <CardContent>
-                <Box>
+                <Stack paddingBottom={1}>
                   <Typography>{srcLangCode}</Typography>
                   <img
                     loading="lazy"
@@ -34,9 +55,9 @@ const Record: React.FC = (): JSX.Element => {
                     alt={""}
                   />
                   <Typography>{translation.sourceText}</Typography>
-                </Box>
-
-                <Box>
+                </Stack>
+                <Divider variant="middle" />
+                <Stack alignItems={"flex-end"} paddingTop={1}>
                   <Typography>{trgLangCode}</Typography>
                   <img
                     loading="lazy"
@@ -45,7 +66,7 @@ const Record: React.FC = (): JSX.Element => {
                     alt={""}
                   />
                   <Typography>{translation.targetText}</Typography>
-                </Box>
+                </Stack>
               </CardContent>
             </Card>
           </Box>
