@@ -16,10 +16,12 @@ import {
   SelectChangeEvent,
   IconButton,
   Stack,
+  Box,
+  FormHelperText,
 } from "@mui/material";
 
 import MicNoneIcon from "@mui/icons-material/MicNone";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 
 const Main: React.FC<{
   microphone: Microphone;
@@ -55,17 +57,32 @@ const Main: React.FC<{
     }
   }, [translate, transcript]);
 
+  const setSourceLang = (src: string) => {
+    microphone.setLanguage(src);
+  };
+
   const handleSetSourceLang = (e: SelectChangeEvent<string>) => {
-    microphone.setLanguage(e.target.value);
+    setSourceLang(e.target.value);
+  };
+
+  const setTargetLang = (trg: string) => {
+    const voices = speaker.getVoiceMap();
+    if (voices) {
+      const defaultVoice = voices[trg][0];
+      speaker.dispatch(setLanguage(trg));
+      speaker.dispatch(setSelectedVoice(defaultVoice));
+    }
   };
 
   const handleSetTargetLang = (e: SelectChangeEvent<string>) => {
-    const voices = speaker.getVoiceMap();
-    speaker.dispatch(setLanguage(e.target.value));
-    if (voices) {
-      const defaultVoice = voices[e.target.value][0];
-      speaker.dispatch(setSelectedVoice(defaultVoice));
-    }
+    setTargetLang(e.target.value);
+  };
+
+  const handleSwapLangs = () => {
+    const srcTemp = srcLang;
+    const trgTemp = trgLang;
+    setSourceLang(trgTemp);
+    setTargetLang(srcTemp);
   };
 
   const handleListen = () => {
@@ -74,93 +91,119 @@ const Main: React.FC<{
 
   return (
     <Stack
+      position={"relative"}
+      display={"flex"}
+      flexDirection={"column"}
+      justifyContent={"center"}
       spacing={1}
       overflow={"auto"}
       minHeight={0.8}
       maxHeight={0.8}
-      padding={1}
+      padding={3}
       boxSizing={"border-box"}
     >
-      <FormControl variant="standard">
-        <InputLabel id="src-lang">{srcLang}</InputLabel>
-        <Select
-          label="Source Language"
-          id="src-lang"
-          name="source"
-          value={microphone.language || ""}
-          onChange={handleSetSourceLang}
-        >
-          {langCodes.map((code) => {
-            const [lang, country] = code.split("-");
+      <Box
+        display={"flex"}
+        width={1}
+        justifyContent={"space-evenly"}
+        alignItems={"center"}
+      >
+        <FormControl variant="standard">
+          <InputLabel id="src-lang">{srcLang}</InputLabel>
+          <Select
+            label="Source Language"
+            id="src-lang"
+            name="source"
+            value={microphone.language || ""}
+            onChange={handleSetSourceLang}
+          >
+            {langCodes.map((code) => {
+              const [lang, country] = code.split("-");
 
-            if (lang === "es" && country === "US") {
+              if (lang === "es" && country === "US") {
+                return (
+                  <MenuItem key={code} value={code}>
+                    <img
+                      loading="lazy"
+                      width="75"
+                      src={`https://flagcdn.com/mx.svg`}
+                      alt={""}
+                    />
+                  </MenuItem>
+                );
+              }
+
               return (
                 <MenuItem key={code} value={code}>
                   <img
                     loading="lazy"
-                    width="50"
-                    src={`https://flagcdn.com/mx.svg`}
+                    width="75"
+                    src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
                     alt={""}
                   />
                 </MenuItem>
               );
-            }
+            })}
+          </Select>
+          <FormHelperText>Source Language</FormHelperText>
+        </FormControl>
 
-            return (
-              <MenuItem key={code} value={code}>
-                <img
-                  loading="lazy"
-                  width="50"
-                  src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
-                  alt={""}
-                />
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
-      <ArrowForwardIosIcon />
-      <FormControl variant="standard">
-        <InputLabel id="src-lang">{trgLang}</InputLabel>
-        <Select
-          label="Target Language"
-          id="trg-lang"
-          name="target"
-          value={speaker.language || ""}
-          onChange={handleSetTargetLang}
-        >
-          {langCodes.map((code) => {
-            const [lang, country] = code.split("-");
+        <IconButton onClick={handleSwapLangs}>
+          <SwapHorizIcon />
+        </IconButton>
 
-            if (lang === "es" && country === "US") {
+        <FormControl variant="standard">
+          <InputLabel id="src-lang">{trgLang}</InputLabel>
+          <Select
+            label="Target Language"
+            id="trg-lang"
+            name="target"
+            value={speaker.language || ""}
+            onChange={handleSetTargetLang}
+          >
+            {langCodes.map((code) => {
+              const [lang, country] = code.split("-");
+
+              if (lang === "es" && country === "US") {
+                return (
+                  <MenuItem key={code} value={code}>
+                    <img
+                      loading="lazy"
+                      width="75"
+                      src={`https://flagcdn.com/mx.svg`}
+                      alt={""}
+                    />
+                  </MenuItem>
+                );
+              }
               return (
                 <MenuItem key={code} value={code}>
                   <img
                     loading="lazy"
-                    width="50"
-                    src={`https://flagcdn.com/mx.svg`}
+                    width="75"
+                    src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
                     alt={""}
                   />
                 </MenuItem>
               );
-            }
-            return (
-              <MenuItem key={code} value={code}>
-                <img
-                  loading="lazy"
-                  width="50"
-                  src={`https://flagcdn.com/${country.toLowerCase()}.svg`}
-                  alt={""}
-                />
-              </MenuItem>
-            );
-          })}
-        </Select>
-      </FormControl>
+            })}
+          </Select>
+          <FormHelperText>Target Language</FormHelperText>
+        </FormControl>
+      </Box>
 
-      <IconButton onClick={handleListen} aria-label="microphone">
-        <MicNoneIcon sx={{ fontSize: "5em" }} />
-      </IconButton>
+      <Box
+        position={"absolute"}
+        bottom={10}
+        left={0}
+        right={0}
+        display={"flex"}
+        justifyContent={"center"}
+      >
+        <IconButton onClick={handleListen} aria-label="microphone">
+          <MicNoneIcon sx={{ fontSize: "5em" }} />
+        </IconButton>
+      </Box>
     </Stack>
   );
 };
