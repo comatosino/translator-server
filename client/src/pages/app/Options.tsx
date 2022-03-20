@@ -35,7 +35,13 @@ const Options: React.FC<{
   };
 
   return (
-    <Stack spacing={3} padding={3} height={.8} boxSizing={'border-box'}>
+    <Stack
+      spacing={3}
+      padding={3}
+      maxHeight={0.8}
+      minHeight={0.8}
+      boxSizing={"border-box"}
+    >
       <Typography component="h2">
         <Divider>Voice Options</Divider>
       </Typography>
