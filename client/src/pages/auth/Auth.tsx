@@ -67,27 +67,30 @@ const Auth: React.FC<{}> = (): JSX.Element => {
           <Stack spacing={2} width={1}>
             <TextField
               type="text"
-              label="Username *"
+              label="Username"
               name="username"
               value={formData.username}
               onChange={handleFormInputChange}
+              required
             />
 
             <TextField
               type="password"
-              label="Password *"
+              label="Password"
               name="password"
               value={formData.password}
               onChange={handleFormInputChange}
+              required
             />
 
             {formType === Form.REGISTER && (
               <TextField
-                label="Confirm Password *"
+                label="Confirm Password"
                 type="password"
                 name="confirmPassword"
                 value={formData.confirmPassword}
                 onChange={handleFormInputChange}
+                required
               />
             )}
 
