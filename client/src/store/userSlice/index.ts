@@ -37,10 +37,20 @@ export const userSlice = createSlice({
     addTranslation: (state, action: PayloadAction<Translation>) => {
       state.profile.translations?.unshift(action.payload);
     },
+    delTranslation: (state, action: PayloadAction<string>) => {
+      state.profile.translations = state.profile.translations?.filter(
+        (translation) => translation._id !== action.payload
+      );
+    },
   },
 });
 
-export const { setUser, clearUser, setFetching, addTranslation } =
-  userSlice.actions;
+export const {
+  setUser,
+  clearUser,
+  setFetching,
+  addTranslation,
+  delTranslation,
+} = userSlice.actions;
 
 export default userSlice.reducer;
