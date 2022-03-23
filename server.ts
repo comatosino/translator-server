@@ -17,7 +17,7 @@ app.use(express.static("/client/build"));
 app.use(authenticate);
 app.use(routes);
 
-app.get("*", (_req, res) => {
+app.get("/", (_req, res) => {
   res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
 });
 

@@ -4,9 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node dist/server.js",
+    "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
+    "start:prod": "node dist/server.js",
     "prebuild": "tsconfig.json --fix",
     "build": "tsc --project .",
+    "heroku-postbuild": "npm run build",
     "build-prod": "cd client && npm install && npm run build && cd .. && npm install && npm run build",
     "server": "nodemon --ignore client/* --exec ts-node server.ts",
     "client": "cd client && npm start && cd ..",
@@ -48,7 +50,8 @@
     "ts-node": "^10.5.0",
     "typescript": "^4.6.2"
   },
-  "engines":{
-    "node":"14.16.1"
- }
+  "engines": {
+    "node": "14.16.1",
+    "npm": "6.14.12"
+  }
 }
