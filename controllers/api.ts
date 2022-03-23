@@ -2,8 +2,6 @@ import { RequestHandler } from "express";
 import axios, { AxiosRequestConfig } from "axios";
 import { Translation, User } from "../db/models";
 
-// List of languages supprted by V2 REST Google Translate API (key required)
-// https://translation.googleapis.com/language/translate/v2/languages
 export const translate: RequestHandler = async (req, res) => {
   try {
     if (!req.userID) res.sendStatus(403);
@@ -61,5 +59,18 @@ export const translate: RequestHandler = async (req, res) => {
     res.status(400).json({ error: "languages are the same" });
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const deleteTranslation: RequestHandler = async (req, res) => {
+  try {
+    await User.findByIdAndUpdate(req.userID, {
+      $pull: { translations: req.params.id },
+    });
+    await Translation.findByIdAndDelete(req.params.id);
+    res.sendStatus(204);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "error deleting translation" });
   }
 };
