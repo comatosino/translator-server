@@ -70,4 +70,9 @@ export default class API {
     const url = `api/translate`;
     return axios.post<Translation>(url, payload);
   };
+
+  static delete = async (id: string): Promise<void> => {
+    const url = `api/translations/${id}`;
+    return axios.delete(url);
+  };
 }
