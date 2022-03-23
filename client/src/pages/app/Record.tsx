@@ -1,5 +1,4 @@
 import "./Record.css";
-import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
 import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
   Box,
@@ -80,13 +79,6 @@ const Record: React.FC = (): JSX.Element => {
                       src={`https://flagcdn.com/${srcCountryCode.toLowerCase()}.svg`}
                       alt={""}
                     />
-                    <IconButton
-                      disabled
-                      onClick={() => console.log("speak")}
-                      aria-label="speak"
-                    >
-                      <RecordVoiceOverIcon />
-                    </IconButton>
                   </Stack>
 
                   <Typography>
