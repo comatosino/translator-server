@@ -1,4 +1,4 @@
-import { setFetching, setUser, clearUser } from ".";
+import { setFetching, setUser, clearUser, delTranslation } from ".";
 import { AppThunk } from "..";
 import API, { Credentials } from "../../utils/API";
 
@@ -64,3 +64,14 @@ export const logout = (): AppThunk => async (dispatch) => {
     dispatch(setFetching(false));
   }
 };
+
+export const deleteTranslation =
+  (id: string): AppThunk =>
+  async (dispatch) => {
+    try {
+      await API.delete(id);
+      dispatch(delTranslation(id));
+    } catch (error) {
+      console.error(error);
+    }
+  };
