@@ -9,18 +9,24 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
+
+import {
+  TextToSpeechOptions,
+  TextToSpeechActions,
+  SpeechSynthesisVoiceMap,
+} from "../../hooks/useTextToSpeech/types";
 import { SpeechToTextOptions } from "../../hooks/useSpeechToText/types";
+
+import languages from "../../utils/languages.json";
+import countries from "../../utils/countries.json";
+
 import {
   setPitch,
   setRate,
   setSelectedVoice,
   setVolume,
 } from "../../hooks/useTextToSpeech/store/actions";
-import {
-  TextToSpeechOptions,
-  TextToSpeechActions,
-  SpeechSynthesisVoiceMap,
-} from "../../hooks/useTextToSpeech/types";
+import { splitLangTag } from "../../utils";
 
 const Options: React.FC<{
   micOptions: SpeechToTextOptions;
@@ -28,6 +34,7 @@ const Options: React.FC<{
   getVoices: () => SpeechSynthesisVoiceMap | undefined;
 }> = ({ micOptions, speakOptions, getVoices }): JSX.Element => {
   const altVoices = getVoices()![speakOptions.language];
+  const [trgLangCode, trgCountryCode] = splitLangTag(speakOptions.language);
 
   const handleSetVoice = (e: SelectChangeEvent<string>) => {
     const voice = altVoices.find((voice) => voice.name === e.target.value);
@@ -36,6 +43,7 @@ const Options: React.FC<{
 
   return (
     <Stack
+      id={"options"}
       spacing={3}
       padding={3}
       maxHeight={0.8}
@@ -47,12 +55,12 @@ const Options: React.FC<{
       </Typography>
 
       <FormControl>
-        <InputLabel>{`${speakOptions.language} alternate voices`}</InputLabel>
+        <InputLabel>{`${languages[trgLangCode]["exonym"]["en"]} (${countries[trgCountryCode]}) Alternate Voices`}</InputLabel>
         <Select
           labelId="alt-voice-select-label"
           id="alt-voice-select"
           value={speakOptions.selectedVoice?.name || ""}
-          label={`${speakOptions.language} alternate voices`}
+          label={`${languages[trgLangCode]["exonym"]["en"]} (${countries[trgCountryCode]}) Alternate Voices`}
           onChange={handleSetVoice}
         >
           {altVoices.map((voice) => {
