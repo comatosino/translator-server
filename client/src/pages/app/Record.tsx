@@ -1,4 +1,6 @@
-import { useAppSelector } from "../../store/hooks";
+import "./Record.css";
+import RecordVoiceOverIcon from "@mui/icons-material/RecordVoiceOver";
+import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
 import {
   Box,
   Card,
@@ -8,29 +10,47 @@ import {
   Divider,
   IconButton,
 } from "@mui/material";
-import DeleteForeverIcon from "@mui/icons-material/DeleteForever";
+
+import languages from "../../utils/languages.json";
+import countries from "../../utils/countries.json";
+
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { deleteTranslation } from "../../store/userSlice/thunks";
+import { splitLangTag } from "../../utils";
+import { Translation } from "../../utils/API";
 
 const Record: React.FC = (): JSX.Element => {
+  const userDispatch = useAppDispatch();
   const translations = useAppSelector(
     (state) => state.user.profile?.translations
   );
 
   if (!translations || !translations.length) {
-    return <Typography>No history to display!</Typography>;
+    return (
+      <Stack
+        maxHeight={0.8}
+        minHeight={0.8}
+        padding={1}
+        boxSizing={"border-box"}
+        justifyContent={"center"}
+      >
+        <Typography textAlign={"center"}>No history to display!</Typography>
+      </Stack>
+    );
   }
 
   return (
     <Stack
+      id={"history"}
       overflow={"auto"}
       maxHeight={0.8}
       minHeight={0.8}
       padding={1}
       boxSizing={"border-box"}
     >
-      {translations.map((translation) => {
-        const [srcLangCode, srcCountryCode] = translation.source.split("-");
-        const [trgLangCode, trgCountryCode] = translation.target.split("-");
-
+      {translations.map((translation: Translation) => {
+        const [srcLangCode, srcCountryCode] = splitLangTag(translation.source);
+        const [trgLangCode, trgCountryCode] = splitLangTag(translation.target);
         return (
           <Box
             key={translation._id}
@@ -38,33 +58,60 @@ const Record: React.FC = (): JSX.Element => {
             margin={1}
             position={"relative"}
           >
-            <Card elevation={10}>
-              <Box position={"absolute"} top={10} right={0}>
-                <IconButton aria-label="delete">
+            <Card elevation={5}>
+              <Box position={"absolute"} top={5} right={5}>
+                <IconButton
+                  onClick={() =>
+                    userDispatch(deleteTranslation(translation._id))
+                  }
+                  aria-label="delete"
+                >
                   <DeleteForeverIcon />
                 </IconButton>
               </Box>
-
               <CardContent>
-                <Stack paddingBottom={1}>
-                  <Typography>{srcLangCode}</Typography>
-                  <img
-                    loading="lazy"
-                    width="50"
-                    src={`https://flagcdn.com/${srcCountryCode.toLowerCase()}.svg`}
-                    alt={""}
-                  />
+                <Stack spacing={1} paddingBottom={1}>
+                  <Typography>{languages[srcLangCode]["endonym"]}</Typography>
+
+                  <Stack direction={"row"}>
+                    <img
+                      loading="lazy"
+                      width="50"
+                      src={`https://flagcdn.com/${srcCountryCode.toLowerCase()}.svg`}
+                      alt={""}
+                    />
+                    <IconButton
+                      disabled
+                      onClick={() => console.log("speak")}
+                      aria-label="speak"
+                    >
+                      <RecordVoiceOverIcon />
+                    </IconButton>
+                  </Stack>
+
+                  <Typography>
+                    {`
+                      ${languages[srcLangCode]["exonym"]["en"]} •
+                      ${countries[srcCountryCode]}
+                    `}
+                  </Typography>
                   <Typography>{translation.sourceText}</Typography>
                 </Stack>
                 <Divider variant="middle" />
-                <Stack alignItems={"flex-end"} paddingTop={1}>
-                  <Typography>{trgLangCode}</Typography>
+                <Stack spacing={1} alignItems={"flex-end"} paddingTop={1}>
+                  <Typography>{languages[trgLangCode]["endonym"]}</Typography>
                   <img
                     loading="lazy"
                     width="50"
                     src={`https://flagcdn.com/${trgCountryCode.toLowerCase()}.svg`}
                     alt={""}
                   />
+                  <Typography>
+                    {`
+                      ${languages[trgLangCode]["exonym"]["en"]} •
+                      ${countries[trgCountryCode]}
+                    `}
+                  </Typography>
                   <Typography>{translation.targetText}</Typography>
                 </Stack>
               </CardContent>
