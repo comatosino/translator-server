@@ -17,8 +17,8 @@ import {
 } from "../../hooks/useTextToSpeech/types";
 import { SpeechToTextOptions } from "../../hooks/useSpeechToText/types";
 
-import languages from "../../utils/languages.json";
-import countries from "../../utils/countries.json";
+import languages from "../../utils/maps/languages.json";
+import countries from "../../utils/maps/countries.json";
 
 import {
   setPitch,

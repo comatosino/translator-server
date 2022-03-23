@@ -16,8 +16,8 @@ import {
 import { Microphone } from "../../hooks/useSpeechToText/types";
 import { Speaker } from "../../hooks/useTextToSpeech/types";
 
-import languages from "../../utils/languages.json";
-import countries from "../../utils/countries.json";
+import languages from "../../utils/maps/languages.json";
+import countries from "../../utils/maps/countries.json";
 
 import { useCallback, useEffect, useState } from "react";
 import {
