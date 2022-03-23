@@ -12,7 +12,7 @@ db.connect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("../client/build"));
+app.use(express.static("/client/build"));
 
 app.use(authenticate);
 app.use(routes);
