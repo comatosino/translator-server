@@ -1,7 +1,7 @@
 import "dotenv/config";
 import db from "./db";
+import cors from "cors";
 import express from "express";
-import path from "path";
 import routes from "./routes";
 import { authenticate } from "./middleware";
 
@@ -12,13 +12,12 @@ db.connect();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use(express.static("/client/build"));
-
+// app.use(cors());
 app.use(authenticate);
 app.use(routes);
 
 app.get("/", (_req, res) => {
-  res.sendFile(path.resolve(__dirname, "client", "build", "index.html"));
+  res.sendStatus(404);
 });
 
 app.listen(PORT, () => {
