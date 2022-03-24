@@ -7,7 +7,9 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:prod": "node dist/index.js",
     "start:dev": "nodemon --exec ts-node src/index.ts",
-    "seed": "cd src && cd db && ts-node seed.ts"
+    "seed": "if-env NODE_ENV=production && npm run seed:prod || npm run seed:dev",
+    "seed:prod": "cd dist && cd db && node seed.js",
+    "seed:dev": "cd src && cd db && ts-node seed.ts"
   },
   "repository": {
     "type": "git",
