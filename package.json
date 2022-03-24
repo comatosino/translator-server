@@ -7,8 +7,6 @@
     "start": "if-env NODE_ENV=production && npm run start:prod || npm run start:dev",
     "start:prod": "node dist/index.js",
     "start:dev": "nodemon --exec ts-node src/index.ts",
-    "prebuild": "tsconfig.json --fix",
-    "build": "tsc --project .",
     "seed": "cd src && cd db && ts-node seed.ts"
   },
   "repository": {
