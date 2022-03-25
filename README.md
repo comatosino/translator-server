@@ -17,7 +17,7 @@ Makes requests to Google Translate REST API
 - [Client](#client)
 - [Endpoints](#endpoints)
 - [Installation](#installation)
-- [Useage](#usage)
+- [Usage](#usage)
 - [Contact](#contact)
 - [License](#license)
 
