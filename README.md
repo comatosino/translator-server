@@ -17,6 +17,7 @@ Makes requests to Google Translate REST API
 - [Client](#client)
 - [Endpoints](#endpoints)
 - [Installation](#installation)
+- [Useage](#usage)
 - [Contact](#contact)
 - [License](#license)
 
@@ -87,6 +88,14 @@ To seed database:
 To transpile TypeScript to JavaScript:
 
 `tsc`
+
+## Usage
+
+`npm start`
+
+In development, this script will run nodemon and ts-node on src/index.ts.
+
+In production, script will check /dist folder and run node index.js
 
 ## Contact
 
