@@ -93,9 +93,9 @@ To transpile TypeScript to JavaScript:
 
 `npm start`
 
-In development, this script will run nodemon and ts-node on src/index.ts.
+In development, this script will run nodemon and ts-node on `src/index.ts`
 
-In production, script will check /dist folder and run node index.js
+In production, script will run `node dist/index.js`
 
 ## Contact
 
