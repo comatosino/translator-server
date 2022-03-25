@@ -4,9 +4,9 @@
 
 ## Description
 
-Backend half of the [Translator](#client) web application.
-
 **Typescript | Node | Express | MongoDB**
+
+Backend half of the [Translator](#client) web application.
 
 Uses JSON web tokens for authentication and authorization.
 
