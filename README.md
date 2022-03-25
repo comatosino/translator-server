@@ -95,7 +95,7 @@ To transpile TypeScript to JavaScript:
 
 In development, this script will run nodemon and ts-node on `src/index.ts`
 
-In production, script will run `node dist/index.js`
+In production, script will run `node dist/index.js`. Runs on localhost:5000. This can be modified in `src/index.ts`.
 
 ## Contact
 
