@@ -4,7 +4,7 @@
 
 ## Description
 
-**Typescript | Node | Express | MongoDB**
+Written in Typescript and powered by Node, Express, and MongoDB
 
 Backend half of the [Translator](#client) web application.
 
@@ -17,7 +17,7 @@ Makes requests to Google Translate REST API
 - [Client](#client)
 - [Endpoints](#endpoints)
 - [Installation](#installation)
-- [Usage](#usage)
+- [Useage](#usage)
 - [Contact](#contact)
 - [License](#license)
 
@@ -93,9 +93,9 @@ To transpile TypeScript to JavaScript:
 
 `npm start`
 
-In development, this script will run nodemon and ts-node on `src/index.ts`
+In development, this script will run nodemon and ts-node on `src/index.ts`. 
 
-In production, script will run `node dist/index.js`. Runs on localhost:5000. This can be modified in `src/index.ts`.
+In production, script will run `node dist/index.js`
 
 ## Contact
 
