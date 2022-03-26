@@ -4,13 +4,13 @@
 
 ## Description
 
-Written in Typescript and powered by Node, Express, and MongoDB
+Written in Typescript and powered by Node, Express, and MongoDB.
 
 Backend half of the [Translator](#client) web application.
 
 Uses JSON web tokens for authentication and authorization.
 
-Makes requests to Google Translate REST API
+Makes requests to Google Translate REST API.
 
 ## Table of Contents
 
