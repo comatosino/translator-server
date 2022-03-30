@@ -10,7 +10,7 @@ const app = express();
 
 db.connect();
 
-app.use(cors({ origin: "https://traductora.herokuapp.com/" }));
+app.use(cors({ origin: "https://traductora.herokuapp.com" }));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
