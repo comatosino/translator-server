@@ -16,7 +16,6 @@ const db = {
     }
   },
 
-  // closes all connections
   disconnect: async function () {
     try {
       return await mongoose.disconnect();
